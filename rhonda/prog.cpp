@@ -31,12 +31,9 @@ No comment yet
     #include "uart.h"
 #endif
 
-
+#include "prog.h"
 
 #include "audio.h"
-
-
-
 #include "hardware.h"
 #include "flac.h"
 #include "translategoogle.h"
@@ -76,8 +73,6 @@ char RamTmpFile[] = "/dev/shm/testfile.flac";
 #endif
 
 
-bool LoadConfig(void);
-int PlayWave(char * file);
 
 
 bool bExit = false;
@@ -104,6 +99,23 @@ int main(int argc, char* argv[]) {
 	bool HotWord = false;
 
 	Resultat[0] = '\0';
+
+	if (argc > 1)
+	{
+		wprintf(L"\033[0;32mPassage d'arguments\033[0;37m\n");
+		if (argv[1][1] = 't')
+		{
+			wprintf(L"Forcage transmetter\n");
+			TestTransmitter(2,1478162,0,"on");
+		}
+		else
+		{
+			Mywprintf(L"FNon compris : %s\n", argv[1]);
+		}
+		return 0;
+	}
+
+
 
 	//load config
 	if (!LoadConfig()) return 0;
@@ -144,10 +156,10 @@ int main(int argc, char* argv[]) {
 
 #ifdef DEBUG
 	//to debug
-
+	//TranslateGoggle("vvv", Resultat);
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
-	cTraitement.traite("testes le fichier de commande");
+	cTraitement.traite("allume la lumiere");
 #ifdef _WIN32
 	system("pause");
 #endif
@@ -174,13 +186,13 @@ int main(int argc, char* argv[]) {
 
 	//Main loop
 
-	wprintf(L"\033[0;31mStarting Main loop\033[0;37m\n");
+	wprintf(L"\033[0;32mStarting Main loop\033[0;37m\n");
 
 	while (!bExit)
 	{
 
 		/*Waiting loop*/
-		Mywprintf(L"\033[0;31m%s => Waiting for trigger\033[0;37m\n", timestamp());
+		Mywprintf(L"\033[1;37m%s => Waiting for trigger\033[0;37m\n", timestamp());
 
 		HotWord = false;
 		pa_wrapper.Start();
@@ -259,7 +271,7 @@ int main(int argc, char* argv[]) {
 
 		}
 
-		Mywprintf(L"%s Trigger declenche\n", timestamp());
+		Mywprintf(L"%s Trigger activated\n", timestamp());
 
 		pa_wrapper.Stop();
 
@@ -279,16 +291,13 @@ int main(int argc, char* argv[]) {
 			err = TranslateGoggle(RamTmpFile, Resultat);
 
 			wprintf(L"***********************************\n");
-			wprintf(L"Resultat avec un score de (%d): %s\n", err , Resultat);
+			wprintf(L"Resultat with a score of (%d): %s\n", err , Resultat);
 			wprintf(L"***********************************\n");
 
 			if (err != 0)
 			{
-				cMatrixLed.DisplayIcone(SMILEY);
-				wprintf(L"Traitement\n");
+				wprintf(L"Processing\n");
 				cTraitement.traite(Resultat);
-
-				wprintf(L"Done\n");
 
 			}
 			else
@@ -376,6 +385,10 @@ bool LoadConfig(void)
 
 	return true;
 }
+
+
+
+/***************************************************************************/
 
 /* fonctions to use main fonction on other part */
 

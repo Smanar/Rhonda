@@ -8,6 +8,7 @@
 #include "hardware.h"
 #include "fonction.h"
 #include "applications.h"
+#include "prog.h"
 
 
 void Exit(void);
@@ -225,15 +226,17 @@ void cTraitement::ManageAction(char *c)
 		else if (strcmp("DIREHEURE", Key) == 0)
 		{
 			time_t crt = time(NULL);
-			strftime(buf, sizeof(buf), "il est %H heure et %M minute", localtime(&crt));
-			mbstowcs(wbuf, buf, strlen(buf));
+			struct tm * timeinfo;
+			timeinfo = localtime(&crt);
+			wcsftime(wbuf, 254, L"Il est %H heure %M", timeinfo);
 			parle(wbuf);
 			}
 		else if (strcmp("DIREDATE", Key) == 0)
 		{
 			time_t crt = time(NULL);
-			strftime(buf, sizeof(buf), "On est %A %d %B", localtime(&crt));
-			mbstowcs(wbuf, buf, strlen(buf));
+			struct tm * timeinfo;
+			timeinfo = localtime(&crt);
+			wcsftime(wbuf, 254, L"On est %A %d %B", timeinfo);
 			parle(wbuf);
 		}
 		else if (strcmp("PROGRAMMETV", Key) == 0)
@@ -330,15 +333,18 @@ void cTraitement::ManageAction(char *c)
 
 			while (*Param != ' ') Param++;
 			*Param = '\0';
-			pin = atoi(Param);
+			pin = atoi(tmp);
+			tmp = Param + 1;
 			while (*Param != ' ') Param++;
 			*Param = '\0';
-			sender = atoi(Param);
+			sender = atoi(tmp);
+			tmp = Param + 1;
 			while (*Param != ' ') Param++;
 			*Param = '\0';
-			interuptor = atoi(Param);
+			interuptor = atoi(tmp);
+			tmp = Param + 1;
 
-			TestTransmitter(pin, sender, interuptor, Param);
+			TestTransmitter(pin, sender, interuptor, tmp);
 
 		}
 		else if (strcmp("EXIT", Key) == 0)
@@ -438,7 +444,7 @@ int cTraitement::traite(char *commande2)
 
 		if (mottotal > Betterscore)
 		{
-			Mywprintf(L"Correspondance trouve pour la chaine : %s\n", ptr);
+			Mywprintf(L"\033[0;31mCorrespondance trouvee pr la chaine : %s\033[0;37m\n", ptr);
 			Betterscore = mottotal;
 			choix = ActionComL[i];
 			wprintf(L"choix %i\n", choix);
@@ -446,7 +452,16 @@ int cTraitement::traite(char *commande2)
 
 	}
 
-	action(choix);
+	if (choix == 0)
+	{
+		_DisplayIcone(INTERROGATION);
+		parle(L"Je n'ai pas compris");
+	}
+	else
+	{
+		_DisplayIcone(SMILEY);
+		action(choix);
+	}
 
 	return 0;
 }

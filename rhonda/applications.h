@@ -1,9 +1,3 @@
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 
 void SetAlarm(time_t t);
@@ -19,6 +13,3 @@ int parle(const wchar_t *texte);
 void executeshell(char *command);
 void lireshell(char *command);
 
-#ifdef __cplusplus
-}
-#endif

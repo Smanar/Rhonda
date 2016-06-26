@@ -248,7 +248,7 @@ int cMatrixLed::ClearMatrix(void)
 int cMatrixLed::CloseMatrix(void)
 {
 	// Closing file and turning off Matrix
-	wprintf(L"Closing file and turning off the LED Matrix\n");
+	wprintf(L"\033[0;31mClosing file and turning off the LED Matri\033[0;37m\n");
 
 #ifndef _WIN32
 
@@ -419,7 +419,7 @@ string onoff;
 void log(string a){
 	//Décommenter pour avoir les logs
 
-	cout << a << endl;
+	//cout << a << endl;
 }
 
 
@@ -571,29 +571,24 @@ int TestTransmitter(int _pin, int _sender, int _interruptor, string _onoff)
 
 	if (setuid(0))
 	{
-
 		perror("setuid");
 		return 1;
-
 	}
 
 	wprintf(L"Using transmitter %d %d %d %s\n",_pin,_sender,_interruptor,_onoff.c_str());
 
-
 	scheduler_realtime();
 
-	log("Demarrage du programme");
 	pin = _pin;
 	sender = _sender;
 	interruptor = _interruptor;
 	onoff = _onoff;
 
 
-
 	//Si on ne trouve pas la librairie wiringPI, on arrête l'execution
 	if (wiringPiSetup() == -1)
 	{
-		log("Librairie Wiring PI introuvable, veuillez lier cette librairie...");
+		wprintf(L"Librairie Wiring PI introuvable, veuillez lier cette librairie...\n");
 		return -1;
 
 	}
@@ -605,8 +600,7 @@ int TestTransmitter(int _pin, int _sender, int _interruptor, string _onoff)
 
 
 	if (onoff == "on"){
-		system("/etc/lcd/screen -p \"Radio signal ON...\"");
-		log("envois du signal ON");
+		wprintf(L"envois du signal ON\n");
 		for (int i = 0; i<5; i++){
 			transmit(true);            // envoyer ON
 			delay(10);                 // attendre 10 ms (sinon le socket nous ignore)
@@ -614,16 +608,12 @@ int TestTransmitter(int _pin, int _sender, int _interruptor, string _onoff)
 
 	}
 	else{
-		system("/etc/lcd/screen -p \"Radio signal OFF...\"");
-		log("envois du signal OFF");
+		wprintf(L"envois du signal OFF\n");
 		for (int i = 0; i<5; i++){
 			transmit(false);           // envoyer OFF
 			delay(10);                // attendre 10 ms (sinon le socket nous ignore)
 		}
 	}
-
-	log("fin du programme");    // execution terminée.
-
 
 	scheduler_standard();
 }

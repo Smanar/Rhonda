@@ -10,7 +10,8 @@
 //#include <direct.h>
 
 #include "translategoogle.h"
-#include "libs/jsmn.h"
+
+#include "libs/slre.h"
 
 
 char GoogleApiKey[40];
@@ -34,13 +35,6 @@ struct MemoryStruct {
 	size_t size;
 };
 
-static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
-	if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
-		strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
-			return 0;
-	}
-	return -1;
-}
 
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
@@ -111,6 +105,8 @@ int TranslateGoggle(char *filename,char *resultat)
 	data.memory = (char *)malloc(1);  /* will be grown as needed by the realloc above */ 
 	data.size = 0;    /* no data at this point */
 
+	resultat[0] = '\0';
+
 	curl = curl_easy_init();
 	if (curl) 
 	{
@@ -164,8 +160,8 @@ int TranslateGoggle(char *filename,char *resultat)
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&data);
 
 		curl_easy_setopt(curl, CURLOPT_CAINFO, 0L);
-curl_easy_setopt(curl, CURLOPT_CAPATH, 0L);
-//curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+		curl_easy_setopt(curl, CURLOPT_CAPATH, 0L);
+		//curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
 		curl_easy_setopt(curl, CURLOPT_URL, apiurl);
@@ -173,89 +169,58 @@ curl_easy_setopt(curl, CURLOPT_CAPATH, 0L);
 		res = curl_easy_perform(curl);
 
 		wprintf(L"***********************************\n");
-		wprintf(L"Resultat \n %s \n",data.memory);
+		wprintf(L"Resultat From Google\n %s \n",data.memory);
 		wprintf(L"***********************************\n");
 
 		{
-			//JSON parser
-			jsmn_parser p;
-			int r;
-			int i;
+			//parsing with regex
+			struct slre_cap caps[2];
 
-			jsmntok_t t[128]; /* We expect no more than 128 tokens */
-			jsmn_init(&p);
-
-
-			r = jsmn_parse(&p, data.memory, data.size, t, sizeof(t)/sizeof(t[0]));
-			if (r < 0)
+			//Have a result with confidence ?
+			if (slre_match("{\"transcript\":\"([^\"]+)\",\"confidence\":([0-9\.]+)}", data.memory, data.size, caps, 2, 0) > 0)
 			{
-				wprintf(L"Failed to parse JSON: %d\n", r);
-				return 0;
+				char *tmp2;
+
+				strncpy(resultat, caps[0].ptr, caps[0].len);
+				strncpy(resultat + caps[0].len, "\0", 1);
+
+				tmp2 = (char *)malloc((caps[1].len + 1) * sizeof(char));
+				strncpy(tmp2, caps[0].ptr, caps[1].len);
+				strncpy(tmp2 + caps[0].len, "\0", 1);
+
+				bestscore = (100 * atof(tmp2));
+				
 			}
-
-			/* Assume the top-level element is an object */
-			if (r < 1 || t[0].type != JSMN_OBJECT)
+			else
 			{
-				wprintf(L"Object expected\n");
-				return 0;
-			}
-
-			/* Loop over all keys of the root object */
-			for (i = 1; i < r; i++)
-			{
-				if (jsoneq(data.memory, &t[i], "result") == 0)
+				// ok nevermind, add all the other results
+				while (slre_match("{\"transcript\":\"([^\"]+)\"}", data.memory, data.size, caps, 1, 0) > 0)
 				{
-					//printf("- Result: %.*s\n", t[i+1].end-t[i+1].start,data.memory + t[i+1].start);
-					i++;
-				}
-				else if (jsoneq(data.memory, &t[i], "alternative") == 0)
-				{
-					int end;
-					//list all alternatives
-					//printf("- alternative: %.*s\n", t[i+1].end-t[i+1].start,data.memory + t[i+1].start);
-					
-					end = t[i+1].end;
+					char *tmp1;
+					int l;
 
-					while (t[i].start < end)//to correct size bug
+					tmp1 = (char *)malloc((caps[0].len + 1) * sizeof(char));
+					strncpy(tmp1, caps[0].ptr, caps[0].len);
+					strncpy(tmp1 + caps[0].len, "\0", 1);
+
+					//TODO : Need to check word and not complete string
+					if (!strstr(resultat, tmp1))
 					{
-						if (jsoneq(data.memory, &t[i], "transcript") == 0)
+						int l = strlen(resultat) + strlen(tmp1) + 1;
+						if (l < 254)
 						{
-							wprintf(L"- transcript: %.*s\n", t[i+1].end-t[i+1].start,data.memory + t[i+1].start);
-							if ((bestscore == 0) && ( t[i+1].end-t[i+1].start < 255 ))
-							{
-								strncpy(resultat,data.memory + t[i+1].start,t[i+1].end-t[i+1].start);
-								resultat[ t[i+1].end-t[i+1].start ] = '\0';
-								bestscore = 50;
-							}
+							strcat(resultat," ");
+							strcat(resultat, tmp1);
 						}
-						if (jsoneq(data.memory, &t[i], "confidence") == 0)
-						{
-							char tmp[255];
-							wprintf(L"- confidence: %.*s\n", t[i+1].end-t[i+1].start,data.memory + t[i+1].start);
-							strncpy(tmp,data.memory + t[i+1].start, t[i+1].end-t[i+1].start);
-							tmp[ t[i+1].end-t[i+1].start ] = '\0';
-							bestscore = 1 + (int)(100 * atof(tmp));
-						}
-
-						i++;
 					}
-					i--;
 
-				}
-				else if (jsoneq(data.memory, &t[i], "final") == 0)
-				{
-					//comparaison ok ?
-					wprintf(L"- final: %.*s\n", t[i+1].end-t[i+1].start,data.memory + t[i+1].start);
-					if (bestscore == 0) bestscore = 50;
-					i++;
-				}
+					l = caps[0].ptr + caps[0].len - data.memory;
+					data.memory += l;
+					data.size -= l;
 
-				else
-				{
-					//printf("Unexpected key: %.*s\n", t[i].end-t[i].start,data.memory + t[i].start);
+					bestscore = 50;
 				}
 			}
-
 		}
 
 		curl_easy_cleanup(curl);
