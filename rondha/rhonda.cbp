@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="jarvis" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/jarvis" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="libs/libsnowboy-detect.a" />
+					<Add library="cblas" />
+					<Add library="lapack_atlas" />
+					<Add library="asound" />
+					<Add library="jack" />
+					<Add library="wiringPi" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/jarvis" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-Wall" />
+					<Add directory="portaudio/install/include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libs/libsnowboy-detect.a" />
+					<Add library="cblas" />
+					<Add library="libs/portaudio/libportaudio.a" />
+					<Add library="lapack_atlas" />
+					<Add library="asound" />
+					<Add library="jack" />
+					<Add library="pthread" />
+					<Add library="rt" />
+					<Add library="m" />
+					<Add library="dl" />
+					<Add library="FLAC" />
+					<Add library="curl" />
+					<Add library="wiringPi" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="applications.cpp" />
+		<Unit filename="audio.cpp" />
+		<Unit filename="flac.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="fonction.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="hardware.cpp" />
+		<Unit filename="libs/i2cbusses.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/jsmn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/pugixml.cpp" />
+		<Unit filename="libs/rs232.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/slre.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="prog.cpp" />
+		<Unit filename="traitement.cpp" />
+		<Unit filename="translategoogle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="uart.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

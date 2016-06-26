@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<mesh name="mesh_root">
+	<!-- configuration-->
+    <config>
+        <api>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx</api>
+        <ville>toulouse</ville>
+        <model>snowboy.umdl</model>
+        <sensibility>0.5</sensibility>
+    </config>
+    <!-- syntaxe  = > Requit/possible/option/interdit -->
+    <!-- (ser) lettre possible dans le mot, inutile pr pluriels car deja geres -->
+    <commandlist>
+        <LC command="*ACTION micro///" action = "1" />
+        <LC command="*INFORMATION *QUESTION heure///" action = "2" />
+        <LC command="*INFORMATION date///" action = "3" />
+        <LC command="*INFORMATION combien///" action = "3" />
+        <LC command="*QUESTION *ACTION programme tele///" action = "4" />
+        <LC command="*QUESTION tele///" action = "4" />
+        <LC command="meteo/*QUESTION *INFORMATION demain//" action = "5" />
+        <LC command="definition/de mot//" action = "6" />
+        <LC command="*QUESTION veut dire///" action = "6" />
+        <LC command="*ALARME a/heure minute heures minutes//" action = "7" />
+        <LC command="*ALARME dans/heure heures minutes minute//" action = "8" />
+        <LC command="mail/*QUESTION *ACTION//" action = "9" />
+        <LC command="*ACTION musique///" action = "10" />
+        <LC command="toi/des connecte deconnecte//" action = "11" />
+        <LC command="test(es) commande/speciale//" action = "12" />
+        <LC command="allume lumiere///" action = "14" />
+        <LC command="eteint lumiere///" action = "15" />
+    </commandlist>
+    <!-- dictionnaire special -->
+    <special>
+        <SPE command="*ACTION" word="affiche actionne active eteint allume teste verifis" />
+        <SPE command="*INFORMATION" word="lit est sera donne" />
+        <SPE command="*QUESTION" word="quoi qu que quelle quel combien" />
+        <SPE command="*ALARME" word="rappelle previens reveille" />
+    </special>
+    <!-- action a faire -->
+    <!-- Separer les actions par | -->
+    <action>
+        <ACT index="1" action="DIRE le micro fonctionne bien" />
+        <ACT index="2" action="DIREHEURE" />
+        <ACT index="3" action="DIREDATE" />
+        <ACT index="4" action="PROGRAMMETV" />
+        <ACT index="5" action="METEO" />
+        <ACT index="6" action="DEFINITION" />
+        <ACT index="7" action="RAPPELA" />
+        <ACT index="8" action="RAPPELDANS" />
+        <ACT index="9" action="CHECKMAIL" />
+        <ACT index="10" action="MUSIQUE" />
+        <ACT index="11" action="DIRE a plus tard | EXIT" />
+        <ACT index="12" action="SHELLEXECUTE shell/test2.sh" />
+        <ACT index="13" action="SHELLLIRE shell/test.sh" />
+        <ACT index="14" action="TRANSMITTER 2 01478162 0 on" />
+        <ACT index="15" action="TRANSMITTER 2 01478162 0 off" />
+    </action>
+    <!-- icones pour la matrice -->
+    <!-- 1=sablier 2=micro 3=smiley 4=interrogation 5/6=anim alien 7=coeur -->
+    <matrixicon>
+        <MAT index="1" data="00YYYYY0 00Y000Y0 000YYY00 0000Y000 000Y0Y00 00Y0Y0Y0 00YYYYY0 00000000" />
+        <MAT index="2" data="0YY00000 YY0Y0000 YYYY0000 0YY0Y000 000YYY00 0000YYY0 00000YY0 0000000Y" />
+        <MAT index="3" data="00GGGG00 0G0000G0 G0G00G0G G000000G G0G00G0G G00GG00G 0G0000G0 00GGGG00" />
+        <MAT index="4" data="000RRR00 00RR00R0 00R000R0 000R0000 0000R000 0000R000 00000000 0000R000" />
+        <MAT index="5" data="00G00G00 00G00G00 0GGGGGG0 GG0GG0GG GGGGGGGG GGGGGGGG G0G00G0G 00G00G00" />
+        <MAT index="6" data="00G00G00 G0G00G0G GGGGGGGG GG0GG0GG GGGGGGGG 0GGGGGG0 00G00G00 0G0000G0" />
+        <MAT index="7" data="00000000 0RR00RR0 RRRRRRRR RRRRRRRR RRRRRRRR 0RRRRRR0 00RRRR00 000RR000" />
+    </matrixicon>
+</mesh>
+<?include somedata?>

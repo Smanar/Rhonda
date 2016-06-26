@@ -1,0 +1,543 @@
+# depslib dependency file v1.0
+1465753786 source:/root/Desktop/Jarvis2/jarvis/demo.cpp
+	<cassert>
+	<csignal>
+	<iostream>
+	<pa_ringbuffer.h>
+	<pa_util.h>
+	<portaudio.h>
+	<string>
+	<vector>
+	"include/snowboy-detect.h"
+	"audio.h"
+
+1349636411 /root/Desktop/Jarvis2/jarvis/portaudio/src/common/pa_ringbuffer.h
+	<sys/types.h>
+
+1296673097 /root/Desktop/Jarvis2/jarvis/portaudio/src/common/pa_util.h
+	"portaudio.h"
+
+1465752128 /root/Desktop/Jarvis2/jarvis/include/snowboy-detect.h
+	<stdint.h>
+	<memory>
+	<string>
+
+1465753785 /root/Desktop/Jarvis2/jarvis/audio.h
+	<string>
+
+1465838426 source:/root/Desktop/Jarvis2/jarvis/prog.cpp
+	<cassert>
+	<csignal>
+	<iostream>
+	<pa_ringbuffer.h>
+	<pa_util.h>
+	<portaudio.h>
+	<string>
+	<vector>
+	"include/snowboy-detect.h"
+	"audio.h"
+	"matrixLEDi2c.h"
+	"flac.h"
+	"translategoogle.h"
+	"traitement.h"
+	"fonction.h"
+	"applications.h"
+
+1465754442 source:/root/Desktop/Jarvis2/jarvis/applications.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"applications.h"
+	"fonction.h"
+	"libs/slre.h"
+
+1465754443 /root/Desktop/Jarvis2/jarvis/applications.h
+	<stdio.h>
+
+1465754458 /root/Desktop/Jarvis2/jarvis/fonction.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1465754486 /root/Desktop/Jarvis2/jarvis/libs/slre.h
+
+1465754454 source:/root/Desktop/Jarvis2/jarvis/flac.c
+	<config.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"flac.h"
+	"FLAC/stream_encoder.h"
+
+1465754455 /root/Desktop/Jarvis2/jarvis/flac.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1465754457 source:/root/Desktop/Jarvis2/jarvis/fonction.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<curl/curl.h>
+	<curl/easy.h>
+	"libs/slre.h"
+
+1465754459 source:/root/Desktop/Jarvis2/jarvis/matrixLEDi2c.c
+	<errno.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	"matrixLEDi2c.h"
+	<windows.h>
+	<unistd.h>
+	"libs/i2c-dev.h"
+	"libs/i2cbusses.h"
+
+1465754461 /root/Desktop/Jarvis2/jarvis/matrixLEDi2c.h
+
+1465754486 /root/Desktop/Jarvis2/jarvis/libs/i2c-dev.h
+	<linux/types.h>
+	<sys/ioctl.h>
+
+1465754486 /root/Desktop/Jarvis2/jarvis/libs/i2cbusses.h
+	<unistd.h>
+
+1465754477 /root/Desktop/Jarvis2/jarvis/translategoogle.h
+	<stdio.h>
+	<stdlib.h>
+
+1465754474 /root/Desktop/Jarvis2/jarvis/traitement.h
+	<string>
+
+1465754472 source:/root/Desktop/Jarvis2/jarvis/traitement.cpp
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<time.h>
+	<wchar.h>
+	"traitement.h"
+	"matrixLEDi2c.h"
+	"fonction.h"
+	"applications.h"
+
+1465754475 source:/root/Desktop/Jarvis2/jarvis/translategoogle.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<curl/curl.h>
+	"translategoogle.h"
+	"libs/jsmn.h"
+
+1465754486 /root/Desktop/Jarvis2/jarvis/libs/jsmn.h
+	<stddef.h>
+
+1465754486 source:/root/Desktop/Jarvis2/jarvis/libs/i2cbusses.c
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/param.h>
+	<string.h>
+	<strings.h>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<limits.h>
+	<dirent.h>
+	<fcntl.h>
+	<errno.h>
+	"i2cbusses.h"
+	"i2c-dev.h"
+
+1465754486 source:/root/Desktop/Jarvis2/jarvis/libs/slre.c
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	"slre.h"
+
+1466862510 source:/root/Desktop/jarvis/applications.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdio.h>
+	"applications.h"
+	"fonction.h"
+	"libs/slre.h"
+	<unistd.h>
+
+1466885127 /root/Desktop/jarvis/applications.h
+	<stdio.h>
+
+1466876242 /root/Desktop/jarvis/fonction.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1465754486 /root/Desktop/jarvis/libs/slre.h
+
+1466016612 source:/root/Desktop/jarvis/flac.c
+	<config.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"flac.h"
+	"FLAC/stream_encoder.h"
+
+1466016613 /root/Desktop/jarvis/flac.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1466876047 source:/root/Desktop/jarvis/fonction.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<wchar.h>
+	<ctype.h>
+	<curl/curl.h>
+	<curl/easy.h>
+	"libs/slre.h"
+	"fonction.h"
+	<unistd.h>
+
+1465754486 source:/root/Desktop/jarvis/libs/i2cbusses.c
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/param.h>
+	<string.h>
+	<strings.h>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<limits.h>
+	<dirent.h>
+	<fcntl.h>
+	<errno.h>
+	"i2cbusses.h"
+	"i2c-dev.h"
+
+1465754486 /root/Desktop/jarvis/libs/i2cbusses.h
+	<unistd.h>
+
+1465754486 /root/Desktop/jarvis/libs/i2c-dev.h
+	<linux/types.h>
+	<sys/ioctl.h>
+
+1465754486 source:/root/Desktop/jarvis/libs/jsmn.c
+	<stdlib.h>
+	<string.h>
+	"jsmn.h"
+
+1465754486 /root/Desktop/jarvis/libs/jsmn.h
+	<stddef.h>
+
+1465754486 source:/root/Desktop/jarvis/libs/slre.c
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	"slre.h"
+
+1466265366 source:/root/Desktop/jarvis/matrixLEDi2c.c
+	<errno.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	"matrixLEDi2c.h"
+	<windows.h>
+	<unistd.h>
+	"libs/i2c-dev.h"
+	"libs/i2cbusses.h"
+
+1466265367 /root/Desktop/jarvis/matrixLEDi2c.h
+
+1466885358 source:/root/Desktop/jarvis/traitement.cpp
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<time.h>
+	<wchar.h>
+	"traitement.h"
+	"hardware.h"
+	"fonction.h"
+	"applications.h"
+
+1466854277 /root/Desktop/jarvis/traitement.h
+	<string>
+
+1466855351 source:/root/Desktop/jarvis/translategoogle.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<wchar.h>
+	<curl/curl.h>
+	"translategoogle.h"
+	"libs/jsmn.h"
+
+1466855353 /root/Desktop/jarvis/translategoogle.h
+	<stdio.h>
+	<stdlib.h>
+
+1465920080 source:/root/Desktop/jarvis/demo.cpp
+	<cassert>
+	<csignal>
+	<iostream>
+	<pa_ringbuffer.h>
+	<pa_util.h>
+	<portaudio.h>
+	<string>
+	<vector>
+	"include/snowboy-detect.h"
+	"audio.h"
+
+1349636411 /root/Desktop/jarvis/portaudio/src/common/pa_ringbuffer.h
+	<sys/types.h>
+
+1296673097 /root/Desktop/jarvis/portaudio/src/common/pa_util.h
+	"portaudio.h"
+
+1465752128 /root/Desktop/jarvis/include/snowboy-detect.h
+	<stdint.h>
+	<memory>
+	<string>
+
+1466857909 /root/Desktop/jarvis/audio.h
+	<string>
+	<vector>
+	<cassert>
+	<csignal>
+	<iostream>
+	<portaudio.h>
+	"pa_ringbuffer.h"
+	"pa_util.h"
+
+1465754486 /root/Desktop/jarvis/libs/pa_ringbuffer.h
+	<sys/types.h>
+
+1465754486 /root/Desktop/jarvis/libs/pa_util.h
+	"portaudio.h"
+
+1466884396 source:/root/Desktop/jarvis/prog.cpp
+	<windows.h>
+	<cassert>
+	<csignal>
+	<iostream>
+	<pa_ringbuffer.h>
+	<pa_util.h>
+	<portaudio.h>
+	<string>
+	<vector>
+	"libs/snowboy-detect.h"
+	"uart.h"
+	"audio.h"
+	"hardware.h"
+	"flac.h"
+	"translategoogle.h"
+	"traitement.h"
+	"fonction.h"
+	"applications.h"
+	"libs/pugixml.hpp"
+	<conio.h>
+	<iostream>
+
+1465933402 source:/root/Desktop/jarvis/record.cpp
+	<stdlib.h>
+	<stdint.h>
+	<string.h>
+	"flac.h"
+	"stdio.h"
+	"matrixLEDi2c.h"
+	"audio.h"
+
+1466867537 source:/root/Desktop/jarvis/audio.cpp
+	<stdlib.h>
+	<stdint.h>
+	<string.h>
+	"flac.h"
+	"stdio.h"
+	"hardware.h"
+	"audio.h"
+
+1466265428 source:/root/Desktop/jarvis/libs/pugixml.cpp
+	"pugixml.hpp"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<assert.h>
+	<limits.h>
+	<wchar.h>
+	<math.h>
+	<float.h>
+	<setjmp.h>
+	<istream>
+	<ostream>
+	<string>
+	<new>
+	<stdint.h>
+
+1466265429 /root/Desktop/jarvis/libs/pugixml.hpp
+	"pugiconfig.hpp"
+	<stddef.h>
+	<exception>
+	<iterator>
+	<iosfwd>
+	<string>
+
+1466265426 /root/Desktop/jarvis/libs/pugiconfig.hpp
+
+1466339470 source:/root/Desktop/jarvis/libs/portaudio/pa_debugprint.c
+	<stdio.h>
+	<stdarg.h>
+	"pa_debugprint.h"
+	"windows.h"
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_debugprint.h
+
+1466339468 source:/root/Desktop/jarvis/libs/portaudio/pa_front.c
+	<stdio.h>
+	<memory.h>
+	<string.h>
+	<assert.h>
+	"portaudio.h"
+	"pa_util.h"
+	"pa_endianness.h"
+	"pa_types.h"
+	"pa_hostapi.h"
+	"pa_stream.h"
+	"pa_trace.h"
+	"pa_debugprint.h"
+
+1466339469 /root/Desktop/jarvis/libs/portaudio/pa_util.h
+	"portaudio.h"
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_endianness.h
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_types.h
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_hostapi.h
+	"portaudio.h"
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_stream.h
+	"portaudio.h"
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_trace.h
+
+1466339468 source:/root/Desktop/jarvis/libs/portaudio/pa_hostapis.c
+	"options_cmake.h"
+	"pa_hostapi.h"
+	"pa_hostapi.h"
+
+1466339468 source:/root/Desktop/jarvis/libs/portaudio/pa_ringbuffer.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"pa_ringbuffer.h"
+	<string.h>
+	"pa_memorybarrier.h"
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_ringbuffer.h
+	<sys/types.h>
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_memorybarrier.h
+	<libkern/OSAtomic.h>
+	<intrin.h>
+
+1466339468 source:/root/Desktop/jarvis/libs/portaudio/pa_util.c
+	<windows.h>
+	<mmsystem.h>
+	"pa_util.h"
+	<pthread.h>
+	<unistd.h>
+	<stdlib.h>
+	<time.h>
+	<sys/time.h>
+	<assert.h>
+	<string.h>
+	<math.h>
+	<errno.h>
+	<mach/mach_time.h>
+	"pa_util.h"
+	"pa_unix_util.h"
+	"pa_debugprint.h"
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_unix_util.h
+	"pa_cpuload.h"
+	<assert.h>
+	<pthread.h>
+	<signal.h>
+
+1466339468 /root/Desktop/jarvis/libs/portaudio/pa_cpuload.h
+
+1466339480 /root/Desktop/jarvis/libs/snowboy-detect.h
+	<stdint.h>
+	<memory>
+	<string>
+
+1466854283 /root/Desktop/jarvis/uart.h
+	<stdio.h>
+
+1466854280 source:/root/Desktop/jarvis/uart.c
+	<stdlib.h>
+	<stdio.h>
+	<Windows.h>
+	<unistd.h>
+	"libs/rs232.h"
+	<windows.h>
+
+1465754486 /root/Desktop/jarvis/libs/rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<windows.h>
+
+1465754486 source:/root/Desktop/jarvis/libs/rs232.c
+	"rs232.h"
+
+1466341214 /root/Desktop/jarvis/portaudio/install/include/portaudio.h
+
+1466341214 /root/Desktop/jarvis/portaudio/install/include/pa_ringbuffer.h
+	<sys/types.h>
+
+1466341214 /root/Desktop/jarvis/portaudio/install/include/pa_util.h
+	"portaudio.h"
+
+1466855346 /root/Desktop/jarvis/hardware.h
+	<string>
+
+1466884576 source:/root/Desktop/jarvis/hardware.cpp
+	<errno.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<wchar.h>
+	"hardware.h"
+	<windows.h>
+	<unistd.h>
+	"libs/i2c-dev.h"
+	"libs/i2cbusses.h"
+	<iostream>
+	<sstream>
+	<wiringPi.h>
+	<sys/time.h>
+	<sched.h>
+	<time.h>
+
+1466885242 source:/root/Desktop/jarvis/applications.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdio.h>
+	<wchar.h>
+	"applications.h"
+	"fonction.h"
+	"libs/slre.h"
+	<unistd.h>
+	<string>
+
