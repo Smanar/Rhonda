@@ -12,7 +12,7 @@ So firstly, I know the code is ugly, but this project was written in shell then 
 
 **It uses:**
 
-- For STT : Google translate.
+- For STT : Google Speech recognition API.
 - For STT : picoTTS.
 - For hotword detection, software solution with https://github.com/Kitt-AI/snowboy, or hardware with http://www.mikroe.com/click/speakup/
 
