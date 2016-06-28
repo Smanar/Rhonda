@@ -1,5 +1,8 @@
-# Rhonda
-Rhondha is just another personal home assistant working with speech recognition (a Javis like). Developped for Raspberry. All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml . Some actions are hard-coded but you can use specials shells scripts for personals actions. He can too command some 433 Mhz devices and use a 8*8 matrix to display some icons.
+# Rhonda (under construction)
+Rhondha is just another personal home assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest possible with the minimal access to the SD card as possible.
+All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml .
+Some actions are hard-coded but you can use specials shells scripts for personals actions.
+He can too command some 433 Mhz devices and use a 8*8 matrix to display some icons.
 
 So firstly, I know the code is ugly, but this project was written in shell then in C and finaly in C++, with lot of modifications (unicode, wide char, string), it must be entirely rewritten. And this application isn't multilanguage yet, lot of parts are hard-coded in french.
 
@@ -52,8 +55,8 @@ So firstly, I know the code is ugly, but this project was written in shell then 
 
 A this moment you have 2 solutions, take the pre-compiled version, or compile it yourself.
 
--The precompiled version, just download the archive here , and extract files.
--If you want to compile it you need first to install somes libraries, the codec FLAC, CURL, various audio libs.
+- The precompiled version, just download the archive here https://github.com/Smanar/Rhonda/releases/download/v1.0.0/Rhonda_release.zip , and extract files.
+- If you want to compile it you need first to install somes libraries, the codec FLAC, CURL and various audio libs.
 
 > sudo apt-get install flac
 > sudo apt-get install libflac-dev
@@ -61,9 +64,9 @@ A this moment you have 2 solutions, take the pre-compiled version, or compile it
 > sudo apt-get install libcurl4-openssl-dev
 > sudo apt-get install libjack-jackd2-dev libsndfile1-dev libasound2-dev
 
-You need too, to buid the portaudio library, but if you don't need special configuration, you will have all the files inside the archive.
+You need too,  buid the portaudio library, but if you don't need special configuration, you will have all the files inside the archive.
 
-Then, there is a code::block project in the source, so you can install it, open the *cdb file and build the project. Be patient, it will take lot of time (the file pugi.xml itself need more than 4/5 mn). But for the next time, you will rebuild only the modified files.
+There is a code::block project in the source, so you can install it, open the *cdb file and build the project. Be patient, it will take lot of time (the file pugi.xml itself need more than 4/5 mn). But for the next time, you will rebuild only the modified files.
 
 > sudo apt-get install codeblocks
 
