@@ -1,8 +1,8 @@
 # Rhonda (under construction)
-Rhondha is just another personal home assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest possible with the minimal access to the SD card as possible.
-All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml .
-Some actions are hard-coded but you can use specials shells scripts for personals actions.
-He can too command some 433 Mhz devices and use a 8*8 matrix to display some icons.
+Rhondha is just another personal home assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest possible with the minimal access to the SD card as possible.  
+All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml .  
+Some actions are hard-coded but you can use specials shells scripts for personals actions.  
+He can too command some 433 Mhz devices and use a 8*8 matrix to display some icons.  
 
 So firstly, I know the code is ugly, but this project was written in shell then in C and finaly in C++, with lot of modifications (unicode, wide char, string), it must be entirely rewritten. And this application isn't multilanguage yet, lot of parts are hard-coded in french.
 
