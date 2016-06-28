@@ -59,10 +59,11 @@ int HotWordModel = 1;
 
 /***********************************************************************/
 
-//Initailisation classe
+//Initailisation classes
 class cTraitement cTraitement;
 class cMatrixLed cMatrixLed;
 class cPlay cPlay;
+class cRecord cRecord;
 
 
 #ifdef _WIN32
@@ -100,6 +101,11 @@ int main(int argc, char* argv[]) {
 
 	Resultat[0] = '\0';
 
+
+	/************************************************/
+
+
+
 	if (argc > 1)
 	{
 		wprintf(L"\033[0;32mPassage d'arguments\033[0;37m\n");
@@ -116,7 +122,6 @@ int main(int argc, char* argv[]) {
 	}
 
 
-
 	//load config
 	if (!LoadConfig()) return 0;
 
@@ -127,7 +132,11 @@ int main(int argc, char* argv[]) {
 	wprintf(L"Snowboy sensivity %s\n", sensitivity_str.c_str());
 	wprintf(L"Snowboy modele %s\n", model_filename.c_str());
 
-	if ((int)(model_filename.find(",")) > 0) HotWordModel = 2;
+	if ((int)(model_filename.find(",")) > 0)
+	{
+		wprintf(L"Snowboy will works with 2 hotwords mode\n");
+		HotWordModel = 2;
+	}
 
 	// Initializes Snowboy detector.A faire avant setlocale sinon bug !!
 	snowboy::SnowboyDetect detector(resource_filename, model_filename);
@@ -154,37 +163,32 @@ int main(int argc, char* argv[]) {
 	if (setlocale(LC_ALL, "fr_FR") == NULL) setlocale(LC_ALL, "fr_FR.utf8");
 
 
+	// Initializes PortAudio wrapper for snowboy. You may use other tools to capture the audio.
+	PortAudioWrapper pa_wrapper(Samplerate, Numchannel, Bitpersample);
+	if (!(pa_wrapper.ready))
+	{
+		wprintf(L"Audio problem for snowboy\n");
+	}
+
+
 #ifdef DEBUG
 	//to debug
 	//TranslateGoggle("vvv", Resultat);
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
-	cTraitement.traite("allume la lumiere");
+	cTraitement.traite("que veut dire livre");
 #ifdef _WIN32
 	system("pause");
 #endif
 	return 0;
 #endif
 
+
+
+	/****************************************************/
+	/***********             Main loop                 **/
 	/****************************************************/
 
-	//Init Audio engine
-	wprintf(L"Initialising audio\n");
-	class cRecord cRecord;
-	// Initializes PortAudio. You may use other tools to capture the audio.
-	PortAudioWrapper pa_wrapper(Samplerate, Numchannel, Bitpersample);
-	if (!(pa_wrapper.ready))
-	{
-		wprintf(L"Audio problem for snowboy\n");
-#ifndef _WIN32
-		return 0;
-#endif
-	}
-
-	/************************************************/
-
-
-	//Main loop
 
 	wprintf(L"\033[0;32mStarting Main loop\033[0;37m\n");
 
@@ -220,10 +224,11 @@ int main(int argc, char* argv[]) {
 					int vide = 10;
 					wprintf(L"Hotword detected %d\n",result);
 
+					PlayWave("resources/ding.wav");
+
 					if (HotWordModel == 1)
 					{
 						HotWord = true;
-						PlayWave("resources/ding.wav");
 					}
 					else
 					{
@@ -343,8 +348,12 @@ bool LoadConfig(void)
 	//config
 	SetGoogleApiKey((char *)panels.child("config").child_value("api"));
 	SetCity((char *)panels.child("config").child_value("ville"));
-	sensitivity_str = std::string(panels.child("config").child_value("sensibility"));
-	model_filename = std::string(panels.child("config").child_value("model"));
+	SetMailUserPass((char *)(panels.child("config").child_value("mailuser")), (char *)(panels.child("config").child_value("mailpass")));
+
+	//sound engine
+	sensitivity_str = std::string(panels.child("sound_engine").child_value("sensibility"));
+	model_filename = std::string(panels.child("sound_engine").child_value("model"));
+	AudioRecordConfig(atoi((char *)(panels.child("sound_engine").child_value("Gain_record"))), atoi((char *)(panels.child("sound_engine").child_value("Min_amplitude"))));
 
 
 	//command list

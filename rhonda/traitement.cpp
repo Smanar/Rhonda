@@ -260,10 +260,12 @@ void cTraitement::ManageAction(char *c)
 
 			mot[49] = '\0';
 			/* Mot a recuperer */
-			if (GetWord(" ([a-zA-Z]+$)", commande, mot))
+			if (GetWord(" ([a-zA-Z]+$)", commande, mot, 49))
 			{
 				wcsncpy(Str, L"Ce mot veut dire ", 500);
+
 				GetDefinition(mot, def);
+
 				wcscat(Str, def);
 				parle(Str);
 			}
@@ -284,7 +286,7 @@ void cTraitement::ManageAction(char *c)
 				time_t crtAlarme;
 
 				/* Rajoute du temps en minutes */
-				if (strcmp("RAPPELDANS", Key) == 0) crtAlarme = crt + temps * 60;
+				if (strcmp("RAPPELDANS", Key) == 0) crtAlarme = crt + temps *60;
 				else
 				{
 					struct tm *Al = localtime(&crt);
@@ -308,8 +310,8 @@ void cTraitement::ManageAction(char *c)
 		{
 			wchar_t Str[400];
 			int m = 0;
-			//m = OpenMailServer("","");
-			Myswprintf(Str, 400, L"Vous avez %i mails", (wchar_t *)m);
+			m = CheckMail();
+			swprintf(Str, 400, L"Vous avez %i mails", m);
 			parle(Str);
 		}
 		else if (strcmp("MUSIQUE", Key) == 0)

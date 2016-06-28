@@ -7,7 +7,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <portaudio.h>
+//#include <portaudio.h>
+#include "portaudio.h"
 #include "pa_ringbuffer.h"
 #include "pa_util.h"
 
@@ -62,7 +63,7 @@ public:
   bool ready;
 };
 
-
+/******************************************************************************************************************/
 /* Class to record sound */
 
 /* Select sample format. */
@@ -94,7 +95,7 @@ typedef unsigned char SAMPLE;
 #endif
 
 
-
+void AudioRecordConfig(int,int);
 
 
 typedef struct
@@ -144,6 +145,9 @@ private:
 	WaveHeader *hdr;
 	PAData data;
 	PaStream* stream;
+
+	//config
+
 
 
 };

@@ -41,5 +41,6 @@ private:
 	int res, i2cbus, address, size, file;
 
 	unsigned short int spectro_bmp[8];
+	bool Ready;
 
 };

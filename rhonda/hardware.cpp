@@ -57,10 +57,13 @@ cMatrixLed::cMatrixLed(void)
 {
 	int i;
 
+	Ready = false;
+
 	wprintf(L"\033[0;31mInitialise matrix\033[0;37m\n");
 	InitMatrix();
 
 	for (i = 0; i < 50; i++) DataIcon[i] = NULL;
+
 }
 
 cMatrixLed::~cMatrixLed(void)
@@ -120,9 +123,12 @@ bool cMatrixLed::MakeIcon(int index,char* datar)
 
 int cMatrixLed::displayImage(unsigned short int bmp[], int res, int daddress, int file)
 {
+
 #ifndef _WIN32
 
-	int i,val;
+	int i;
+
+	if (!Ready) return false;
 
 	for(i=0; i<8; i++)
     {
@@ -144,29 +150,29 @@ int cMatrixLed::InitMatrix(void)
 	//int res, i2cbus, address, size, file;
 	int value = 0, daddress;
 	char filename[20];
-	int force = 0, readback = 1;
+	int force = 0;
 	//__u16 block[I2C_SMBUS_BLOCK_MAX];
 	int len = 0;
 
 	i2cbus = lookup_i2c_bus(I2C_PORT);
 	wprintf(L"i2cbus = %d\n", i2cbus);
-	if (i2cbus < 0) return 0;
+	if (i2cbus < 0) return false;
 
 	address = parse_i2c_address(I2C_ADDR);
 	wprintf(L"address = 0x%2x\n", address);
-	if (address < 0) return 0;
+	if (address < 0) return false;
 
 	size = I2C_SMBUS_BYTE;
 
 	daddress = 0x21;
 	if (daddress < 0 || daddress > 0xff) {
 		wprintf(L"Error: Data address invalid!\n");
-		return 0;
+		return false;
 	}
 
 	file = open_i2c_dev(i2cbus, filename, sizeof(filename), 0);
 	wprintf(L"file = %d\n", file);
-	if (file < 0 || check_funcs(file, size) || set_slave_addr(file, address, force)) return 0;
+	if (file < 0 || check_funcs(file, size) || set_slave_addr(file, address, force)) return false;
 
 
 	switch (size)
@@ -210,7 +216,7 @@ int cMatrixLed::InitMatrix(void)
 	if (res < 0) {
 		wprintf(L"Error: Write failed\n");
 		close(file);
-		return 0;
+		return false;
 	}
 
 #if 0
@@ -230,15 +236,21 @@ int cMatrixLed::InitMatrix(void)
 #endif
 	//ClearMatrix();
 
+	Ready = true;
+
 	return true;
 
 }
 
 int cMatrixLed::ClearMatrix(void)
 {
+
 #ifndef _WIN32
 
 		int daddress = 0x20;
+
+		if (!Ready) return false;
+
 		res = i2c_smbus_write_byte(file, daddress);
 #endif
 		return true;
@@ -319,10 +331,13 @@ static int check_funcs(int file, int size)
 
 int cMatrixLed::DisplayIcone(int icon)
 {
+
 #ifndef _WIN32
 
 	int daddress;
 	daddress = 0x00; // Start writing to address 0 (page 13)
+
+	if (!Ready) return false;
 
 	if (icon == CLEAR)
 	{
@@ -349,6 +364,8 @@ int cMatrixLed::DisplaySpectro(int val)
 	int daddress;
 	daddress = 0x00;
 	int i;
+
+	if (!Ready) return false;
 
 	if (val == -1) memset(spectro_bmp, 0, 8);
 
@@ -616,6 +633,8 @@ int TestTransmitter(int _pin, int _sender, int _interruptor, string _onoff)
 	}
 
 	scheduler_standard();
+
+	return true;
 }
 
 #endif

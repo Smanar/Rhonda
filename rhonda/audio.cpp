@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 
+
 //#include "record.h"
 #include "flac.h"
 #include "stdio.h"
@@ -9,17 +10,19 @@
 //#include <pa_ringbuffer.h>
 #include "audio.h"
 
+#include "prog.h"
 
-//#ifndef _WIN32
+#ifndef _WIN32
+#include <unistd.h>
+#endif
+
 #pragma comment(lib,"libs/libsnowboy-detect.a")
 //#pragma comment(lib,"libs/portaudio/install/lib/libportaudio.so")
-//#endif
+
 
 #define NUM_CHANNELS    (1)
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
-#define GAIN 2
-#define MINAMPLITUDE 2000
 #define MAXSILENCE 900
 #define MINSILENCE 500
 #define MINFRAME 45000
@@ -30,10 +33,10 @@
 
 int fd = 0;
 
-int _DisplaySpectro(int val);
-int _DisplayIcone(int val);
-
 bool PortAudioInitialised = false;
+
+int Config_Gain=2;
+int Min_Amplitude = 2000;
 
 
 WaveHeader *genericWAVHeader(WaveHeader*hdr, uint32_t sample_rate, uint16_t bit_depth, uint16_t channels)
@@ -120,8 +123,11 @@ int writeWAVHeaderBuffer(char* buff2, WaveHeader *hdr)
 
 	return 0;
 }
+
 /**************************************************************************/
-/******        init      ******/
+/******                        Common fonction                       ******/
+/**************************************************************************/
+
 int InitPortAudio(void)
 {
 
@@ -139,7 +145,7 @@ int InitPortAudio(void)
 	PaError pa_init_ans = Pa_Initialize();
 
 	if (pa_init_ans != paNoError) {
-		std::cerr << "Fail to initialize PortAudio, error message is \"" << Pa_GetErrorText(pa_init_ans) << "\"" << std::endl;
+		wprintf(L"Fail to initialize PortAudio, error message is %s\n", Pa_GetErrorText(pa_init_ans));
 		return false;
 	}
 
@@ -184,6 +190,9 @@ int InitPortAudio(void)
 
 
 /**************************************************************************/
+/******                        Snowboy fonction                      ******/
+/**************************************************************************/
+
 
 
 int PortAudioCallback(const void* input, void* output, unsigned long frame_count, const PaStreamCallbackTimeInfo* time_info, PaStreamCallbackFlags status_flags, void* user_data);
@@ -215,7 +224,7 @@ void PortAudioWrapper::Read(std::vector<int16_t>* data) {
 
 	// Checks ring buffer overflow.
 	if (num_lost_samples_ > 0) {
-		std::cerr << "Lost " << num_lost_samples_ << " samples due to ring buffer overflow." << std::endl;
+		wprintf(L"Lost %d samples due to ring buffer overflow.\n", num_lost_samples_);
 		num_lost_samples_ = 0;
 	}
 
@@ -237,7 +246,7 @@ void PortAudioWrapper::Read(std::vector<int16_t>* data) {
 
 	if (num_read_samples != num_available_samples)
 	{
-		std::cerr << num_available_samples << " samples were available,  but only " << num_read_samples << " samples were read." << std::endl;
+		wprintf(L"%d samples were available,  but only %d samples were read.\n", num_available_samples, num_read_samples);
 	}
 }
 
@@ -268,7 +277,7 @@ bool PortAudioWrapper::Init(int sample_rate, int num_channels, int bits_per_samp
 	ringbuffer_ = static_cast<char*>( PaUtil_AllocateMemory(bits_per_sample / 8 * ringbuffer_size));
 
 	if (ringbuffer_ == NULL) {
-		std::cerr << "Fail to allocate memory for ring buffer." << std::endl;
+		wprintf(L"Fail to allocate memory for ring buffer.\n");
 		return false;
 	}
 
@@ -311,17 +320,17 @@ bool PortAudioWrapper::Start()
 		pa_open_ans = Pa_OpenDefaultStream(&pa_stream_, num_channels_, 0, paInt32, sample_rate_, paFramesPerBufferUnspecified, PortAudioCallback, this);
 	}
 	else {
-		std::cerr << "Unsupported BitsPerSample: " << bits_per_sample_ << std::endl;
+		wprintf(L"Unsupported BitsPerSample: %d\n", bits_per_sample_);
 		return false;
 	}
 	if (pa_open_ans != paNoError) {
-		std::cerr << "Fail to open PortAudio stream, error message is \"" << Pa_GetErrorText(pa_open_ans) << "\"" << std::endl;
+		wprintf(L"Fail to open PortAudio stream, error message is %s\n", Pa_GetErrorText(pa_open_ans));
 		return false;
 	}
 
 	PaError pa_stream_start_ans = Pa_StartStream(pa_stream_);
 	if (pa_stream_start_ans != paNoError) {
-		std::cerr << "Fail to start PortAudio stream, error message is \"" << Pa_GetErrorText(pa_stream_start_ans) << "\"" << std::endl;
+		wprintf(L"Fail to start PortAudio stream, error message is %s\n", Pa_GetErrorText(pa_stream_start_ans));
 		return false;
 	}
 
@@ -329,19 +338,15 @@ bool PortAudioWrapper::Start()
 	ring_buffer_size_t rb_init_ans = PaUtil_InitializeRingBuffer(&pa_ringbuffer_, bits_per_sample_ / 8, ringbuffer_size, ringbuffer_);
 
 	if (rb_init_ans == -1) {
-		std::cerr << "Ring buffer size is not power of 2." << std::endl;
+		wprintf(L"Ring buffer size is not power of 2");
 		return false;
 	}
 
 	return true;
 }
 
-int PortAudioCallback(const void* input,
-	void* output,
-	unsigned long frame_count,
-	const PaStreamCallbackTimeInfo* time_info,
-	PaStreamCallbackFlags status_flags,
-	void* user_data) {
+int PortAudioCallback(const void* input,void* output,unsigned long frame_count,	const PaStreamCallbackTimeInfo* time_info,	PaStreamCallbackFlags status_flags,	void* user_data)
+{
 	PortAudioWrapper* pa_wrapper = reinterpret_cast<PortAudioWrapper*>(user_data);
 	pa_wrapper->Callback(input, output, frame_count, time_info, status_flags);
 	return paContinue;
@@ -350,11 +355,15 @@ int PortAudioCallback(const void* input,
 
 
 
-/*************************************************************************/
+/**************************************************************************/
+/******                      Recorder fonction                       ******/
+/**************************************************************************/
+
 
 #define ENR_ATTENTE 0
 #define ENR_ENCOURS 1
 #define ENR_FINI 2
+#define ENR_RATE 3
 
 long amplitude;
 int Enr_etat;
@@ -374,7 +383,9 @@ int Checkamplitude(long value)
 {
 	//wprintf(L"Debug %d.\n", value);
 
-	if (value > MINAMPLITUDE)
+	if (Enr_etat == ENR_RATE) return Enr_etat;
+
+	if (value > Min_Amplitude)
 	{
 		if (Enr_etat == ENR_ATTENTE)
 		{
@@ -395,7 +406,8 @@ int Checkamplitude(long value)
 			if (Enr_etat != ENR_FINI)
 			{
 				wprintf(L"Trop de silence.\n");
-				Enr_etat = ENR_FINI;
+				if (Enr_etat == ENR_ENCOURS) Enr_etat = ENR_FINI;
+				else Enr_etat = ENR_RATE;
 			}
 		}
 	}
@@ -477,7 +489,7 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,	unsigned 
 
 	detection = Checkamplitude(totalamplitude / framesToCalc);
 	//stop if too much silence
-	if (detection == ENR_FINI )	finished = paComplete;
+	if ((detection == ENR_FINI) || (detection == ENR_RATE)) finished = paComplete;
 
 
 	//Display spectrographe
@@ -500,7 +512,7 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,	unsigned 
 		{
 			for (i = 0; i < framesToCalc; i++)
 			{
-				*wptr++ = (*rptr++) * GAIN;  /* left */
+				*wptr++ = (*rptr++) * Config_Gain;  /* left */
 				if (NUM_CHANNELS == 2) *wptr++ = *rptr++;  /* right */
 			}
 
@@ -513,6 +525,20 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,	unsigned 
 }
 
 /**************************************/
+
+void AudioRecordConfig(int g,int ma)
+{
+	if ((g > 0) && (g < 10))
+	{
+		Config_Gain = g;
+	}
+	if ((ma > 0) && (ma < 20000))
+	{
+		Min_Amplitude = ma;
+	}
+
+}
+
 
 cRecord::cRecord()
 {
@@ -532,6 +558,9 @@ cRecord::cRecord()
 	{
 		wprintf(L"Error allocating WAV header.\n");
 	}
+
+	//initialising var
+
 }
 
 cRecord::~cRecord()
@@ -592,7 +621,7 @@ int cRecord::RecordFLAC(const char *fileName, uint32_t duration)
 {
 
 	PaError err = paNoError;
-	
+
 	int MaxFrames;
 	int numSamples;
 	int numBytes;
@@ -638,6 +667,13 @@ int cRecord::RecordFLAC(const char *fileName, uint32_t duration)
 		wprintf(L"Fichier trop petit, nbre frame = %d < %d\n",data.frameIndex,MINFRAME);
 		return 0;
 	}
+
+	if (Enr_etat == ENR_RATE)
+	{
+		wprintf(L"Enregistrement annulle\n");
+		return 0;
+	}
+
 
 #if 0
 	/* Measure maximum peak amplitude. */
@@ -711,7 +747,9 @@ int cRecord::RecordFLAC(const char *fileName, uint32_t duration)
 	return 1;
 }
 
-/************************************************************/
+/**************************************************************************/
+/******                    Wav player fonction                       ******/
+/**************************************************************************/
 
 int bytesPerSample, bitsPerSample;
 FILE* wavfile;
@@ -743,7 +781,7 @@ cPlay::cPlay()
 	InitPortAudio();
 
 	ready = true;
-	
+
 }
 
 cPlay::~cPlay()
@@ -754,7 +792,7 @@ cPlay::~cPlay()
 
 int cPlay::PlayWav(char * file)
 {
-	
+
 	if (!ready) return false;
 
 	wavfile = fopen(file, "r");
@@ -787,7 +825,7 @@ int cPlay::PlayWav(char * file)
 	}
 
 	wprintf(L"Playing wav : %s\n",file);
-	
+
 	// wait until stream has finished playing
 	while (Pa_IsStreamActive(stream) > 0)
 	{

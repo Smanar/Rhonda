@@ -87,15 +87,16 @@ char* LectureWeb(char* URL)
 
   if(LectureLC.buffer)
   {
-	    Chaine = (char*)malloc((LectureLC.size + 1) * sizeof (char));
 
-		strcpy(Chaine, LectureLC.buffer); 
-		strcat(Chaine,"\0");
+	Chaine = (char*)malloc((LectureLC.size + 1) * sizeof (char));
 
-		free(LectureLC.buffer);
-		LectureLC.buffer = NULL;
+	strcpy(Chaine, LectureLC.buffer); 
+	strcat(Chaine,"\0");
 
-	    return Chaine;
+	free(LectureLC.buffer);
+	LectureLC.buffer = NULL;
+
+	return Chaine;
   }
   
  
@@ -337,7 +338,7 @@ char* mystrstr(char *s, char *subs) {
 		c++;
 	}
 
-	for( ; *s != '\0'; *s++)
+	for( ; *s != '\0'; s++)
 	{
 		if(*s != *b)
 		{
@@ -356,7 +357,7 @@ char* mystrstr(char *s, char *subs) {
 				}
 #if 1
 				//Est ce que tout les caracteres suivant sont dans la partie entre parenthses ?
-				while (charisinstring(c, *a)) *a++;
+				while (charisinstring(c, *a)) a++;
 
 				//Deuxieme test
 				if ((*a == ' ') || (*a == '\0') || (*a == 's'))
@@ -492,7 +493,7 @@ void UnicodeToAnsi(char *str, char *str2)
 
 /***************************************************************/
 
-int GetWord(char * reg, char *str, char *res)
+int GetWord(char * reg, char *str, char *res, int l)
 {
 	struct slre_cap caps[1];
 
@@ -500,7 +501,8 @@ int GetWord(char * reg, char *str, char *res)
 	{
 
 		/* Max 255 char */
-		if (caps[0].len >= strlen(res)) caps[0].len = strlen(res) - 1;
+		l--;
+		if (caps[0].len > l) caps[0].len = l;
 
 		strncpy(res,caps[0].ptr,caps[0].len);
 		strncpy(res + caps[0].len ,"\0", 1);
@@ -566,6 +568,7 @@ int Findhour2(char *str)
 	if (mystrstr(str, "un quart d'heure")) return 15;
 	if (mystrstr(str, "demie heure")) return 30;
 
+	//heure et minutes
 	if (slre_match(" ([0-9]+)h([0-9]+)", str, strlen(str), caps, 2, 0) > 0)
 	{
 		char *tmp;
@@ -584,8 +587,8 @@ int Findhour2(char *str)
 
 		return minut + 60 * hour;
 	}
-
-	if (slre_match(" ([0-9]+)h", str, strlen(str), caps, 2, 0) > 0)
+	//heures seules
+	else if (slre_match(" ([0-9]+)h", str, strlen(str), caps, 2, 0) > 0)
 	{
 		char *tmp = (char *)malloc((caps[0].len + 1) * sizeof(char));
 		strncpy(tmp, caps[0].ptr, caps[0].len);
@@ -594,6 +597,17 @@ int Findhour2(char *str)
 		free(tmp);
 
 		return hour * 60;
+	}
+	//minutes seules
+	else if (slre_match(" ([0-9]+) minute", str, strlen(str), caps, 2, 0) > 0)
+	{
+		char *tmp = (char *)malloc((caps[0].len + 1) * sizeof(char));
+		strncpy(tmp, caps[0].ptr, caps[0].len);
+		strncpy(tmp + caps[0].len, "\0", 1);
+		minut = atoi(tmp);
+		free(tmp);
+
+		return minut;
 	}
 
 	return 0;

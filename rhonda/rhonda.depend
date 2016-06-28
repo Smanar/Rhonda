@@ -541,3 +541,254 @@
 	<unistd.h>
 	<string>
 
+1467043709 source:/root/Desktop/Rhonda/applications.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<stdio.h>
+	<wchar.h>
+	"applications.h"
+	"fonction.h"
+	"libs/slre.h"
+	<unistd.h>
+	<string>
+
+1467043709 /root/Desktop/Rhonda/applications.h
+	<stdio.h>
+
+1467043709 /root/Desktop/Rhonda/fonction.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1467043734 /root/Desktop/Rhonda/libs/slre.h
+
+1467056736 source:/root/Desktop/Rhonda/audio.cpp
+	<stdlib.h>
+	<stdint.h>
+	<string.h>
+	<unistd.h>
+	"flac.h"
+	"stdio.h"
+	"hardware.h"
+	"audio.h"
+	"prog.h"
+
+1467043709 /root/Desktop/Rhonda/flac.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1467043709 /root/Desktop/Rhonda/hardware.h
+	<string>
+
+1467056455 /root/Desktop/Rhonda/audio.h
+	<string>
+	<vector>
+	<cassert>
+	<csignal>
+	<iostream>
+	"portaudio.h"
+	"pa_ringbuffer.h"
+	"pa_util.h"
+
+1467056370 /root/Desktop/Rhonda/libs/portaudio/portaudio.h
+
+1467043733 /root/Desktop/Rhonda/libs/pa_ringbuffer.h
+	<sys/types.h>
+
+1467043733 /root/Desktop/Rhonda/libs/pa_util.h
+	"portaudio.h"
+
+1467043709 /root/Desktop/Rhonda/prog.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1467043709 source:/root/Desktop/Rhonda/flac.c
+	<config.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"flac.h"
+	"FLAC/stream_encoder.h"
+
+1467043709 source:/root/Desktop/Rhonda/fonction.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<wchar.h>
+	<ctype.h>
+	<curl/curl.h>
+	<curl/easy.h>
+	"libs/slre.h"
+	"fonction.h"
+	<unistd.h>
+
+1467043709 source:/root/Desktop/Rhonda/hardware.cpp
+	<errno.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<wchar.h>
+	"hardware.h"
+	<windows.h>
+	<unistd.h>
+	"libs/i2c-dev.h"
+	"libs/i2cbusses.h"
+	<iostream>
+	<sstream>
+	<wiringPi.h>
+	<sys/time.h>
+	<sched.h>
+	<time.h>
+
+1467043729 /root/Desktop/Rhonda/libs/i2c-dev.h
+	<linux/types.h>
+	<sys/ioctl.h>
+
+1467043729 /root/Desktop/Rhonda/libs/i2cbusses.h
+	<unistd.h>
+
+1467043729 source:/root/Desktop/Rhonda/libs/i2cbusses.c
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/param.h>
+	<string.h>
+	<strings.h>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<limits.h>
+	<dirent.h>
+	<fcntl.h>
+	<errno.h>
+	"i2cbusses.h"
+	"i2c-dev.h"
+
+1467043729 source:/root/Desktop/Rhonda/libs/jsmn.c
+	<stdlib.h>
+	<string.h>
+	"jsmn.h"
+
+1467043732 /root/Desktop/Rhonda/libs/jsmn.h
+	<stddef.h>
+
+1467043733 source:/root/Desktop/Rhonda/libs/pugixml.cpp
+	"pugixml.hpp"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<assert.h>
+	<limits.h>
+	<wchar.h>
+	<math.h>
+	<float.h>
+	<setjmp.h>
+	<istream>
+	<ostream>
+	<string>
+	<new>
+	<stdint.h>
+
+1467043733 /root/Desktop/Rhonda/libs/pugixml.hpp
+	"pugiconfig.hpp"
+	<stddef.h>
+	<exception>
+	<iterator>
+	<iosfwd>
+	<string>
+
+1467043733 /root/Desktop/Rhonda/libs/pugiconfig.hpp
+
+1467043734 source:/root/Desktop/Rhonda/libs/rs232.c
+	"rs232.h"
+
+1467043734 /root/Desktop/Rhonda/libs/rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<windows.h>
+
+1467043734 source:/root/Desktop/Rhonda/libs/slre.c
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	"slre.h"
+
+1467043709 source:/root/Desktop/Rhonda/prog.cpp
+	<windows.h>
+	<cassert>
+	<csignal>
+	<iostream>
+	<pa_ringbuffer.h>
+	<pa_util.h>
+	<portaudio.h>
+	<string>
+	<vector>
+	"libs/snowboy-detect.h"
+	"uart.h"
+	"prog.h"
+	"audio.h"
+	"hardware.h"
+	"flac.h"
+	"translategoogle.h"
+	"traitement.h"
+	"fonction.h"
+	"applications.h"
+	"libs/pugixml.hpp"
+	<conio.h>
+	<iostream>
+
+1467043734 /root/Desktop/Rhonda/libs/snowboy-detect.h
+	<stdint.h>
+	<memory>
+	<string>
+
+1467043712 /root/Desktop/Rhonda/uart.h
+	<stdio.h>
+
+1467043712 /root/Desktop/Rhonda/translategoogle.h
+	<stdio.h>
+	<stdlib.h>
+
+1467043712 /root/Desktop/Rhonda/traitement.h
+	<string>
+
+1467043712 source:/root/Desktop/Rhonda/traitement.cpp
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<time.h>
+	<wchar.h>
+	"traitement.h"
+	"hardware.h"
+	"fonction.h"
+	"applications.h"
+	"prog.h"
+
+1467043712 source:/root/Desktop/Rhonda/translategoogle.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<wchar.h>
+	<curl/curl.h>
+	"translategoogle.h"
+	"libs/slre.h"
+
+1467043712 source:/root/Desktop/Rhonda/uart.c
+	<stdlib.h>
+	<stdio.h>
+	<Windows.h>
+	<unistd.h>
+	"libs/rs232.h"
+	<windows.h>
+

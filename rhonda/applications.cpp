@@ -20,7 +20,7 @@ int PlayWave(char * file);
 
 /*************************************/
 
-time_t Alarme1;
+time_t Alarme1 = 0;
 
 void SetAlarm(time_t t)
 {
@@ -39,7 +39,7 @@ void Checkalarm(void)
 
 	wprintf(L"Verifiacation des alarme\n");
 
-	if (Alarme1 > crt)
+	if ((Alarme1 < crt) && (Alarme1 > 0))
 	{
 		parle(L"Alarme declenchee");
 		Alarme1 = 0;
@@ -97,18 +97,20 @@ int GetDefinition(char *mot, wchar_t * def)
 
 	char *search;
 
-	printf("Recherche de la definition du mot : %s\n",mot);
+	Mywprintf(L"Recherche de la definition du mot : %s\n",mot);
 
 	search = url_encode(mot);
 	if (strlen(search) > 100)
 	{
 		free(search);
-		return 1;
+		return false;
 	}
 
 	snprintf(url,255,"https://fr.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=%s",search);
 	free(search);
 	html = LectureWeb(url);
+
+	if (!html) return false;
 
 	if (slre_match(",.\"([^\"]+)\".,.\"http",html, strlen(html), caps, 1, 0) > 0)
 	{
@@ -129,9 +131,35 @@ int GetDefinition(char *mot, wchar_t * def)
 
 	free(html);
 
-	return 0;
+	return true;
 
 }
+
+
+/*******************************************************/
+
+char MailUser[50];
+char MailPass[50];
+
+void SetMailUserPass(char *u, char *p)
+{
+	int l = strlen(u);
+	if (l > 49) l = 49;
+	strncpy(MailUser, u, l);
+
+	l = strlen(p);
+	if (l > 49) l = 49;
+	strncpy(MailPass, p, l);
+
+}
+int CheckMail(void)
+{
+	int mail = 0;
+	mail = OpenMailServer(MailUser, MailPass);
+
+	return mail;
+}
+
 
 /******************************************************/
 //http://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix

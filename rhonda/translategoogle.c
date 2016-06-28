@@ -185,10 +185,10 @@ int TranslateGoggle(char *filename,char *resultat)
 				strncpy(resultat + caps[0].len, "\0", 1);
 
 				tmp2 = (char *)malloc((caps[1].len + 1) * sizeof(char));
-				strncpy(tmp2, caps[0].ptr, caps[1].len);
-				strncpy(tmp2 + caps[0].len, "\0", 1);
+				strncpy(tmp2, caps[1].ptr, caps[1].len);
+				strncpy(tmp2 + caps[1].len, "\0", 1);
 
-				bestscore = (100 * atof(tmp2));
+				bestscore = 1 + (100 * atof(tmp2));
 				
 			}
 			else

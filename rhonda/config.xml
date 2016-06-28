@@ -2,11 +2,20 @@
 <mesh name="mesh_root">
 	<!-- configuration-->
     <config>
-        <api>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx</api>
-        <ville>toulouse</ville>
-        <model>snowboy.umdl</model>
-        <sensibility>0.5</sensibility>
+        <api>XXXXXXXXXXXXXXXXXXXXXXXXXXXxx</api>
+        <ville>paris</ville>
+        <mailuser>user</mailuser>
+        <mailpass>pass</mailpass>
     </config>
+    <!-- configuration du son-->
+    <!-- Gain_record = gain a appliquer au micro durant enregistrement -->
+    <!-- Min_amplitude = valeur minimum pr declencher enregistrement -->
+    <sound_engine>
+        <model>resources/snowboy.umdl</model>
+        <sensibility>0.5</sensibility>
+        <Gain_record>2</Gain_record>
+        <Min_amplitude>2500</Min_amplitude>
+    </sound_engine>
     <!-- syntaxe  = > Requit/possible/option/interdit -->
     <!-- (ser) lettre possible dans le mot, inutile pr pluriels car deja geres -->
     <commandlist>
@@ -26,7 +35,7 @@
         <LC command="toi/des connecte deconnecte//" action = "11" />
         <LC command="test(es) commande/speciale//" action = "12" />
         <LC command="allume lumiere///" action = "14" />
-        <LC command="eteint lumiere///" action = "15" />
+        <LC command="etein(ts) lumiere///" action = "15" />
     </commandlist>
     <!-- dictionnaire special -->
     <special>

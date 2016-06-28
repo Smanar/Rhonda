@@ -13,3 +13,6 @@ int parle(const wchar_t *texte);
 void executeshell(char *command);
 void lireshell(char *command);
 
+int CheckMail(void);
+void SetMailUserPass(char *u, char *p);
+
