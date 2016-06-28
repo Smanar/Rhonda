@@ -87,7 +87,7 @@ To get the api key http://www.chromium.org/developers/how-tos/api-keys
 And then just run the application.
 
 
->sudo chmod 755 rhonda
+>sudo chmod 755 rhonda  
 > ./rhonda
 
 
