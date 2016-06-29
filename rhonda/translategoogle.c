@@ -152,7 +152,7 @@ int TranslateGoggle(char *filename,char *resultat)
 		curl_easy_setopt(curl, CURLOPT_POST, 1L);
 		curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
 		curl_easy_setopt(curl, CURLOPT_READDATA, &pooh);
-		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);// To debug
 
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
 
@@ -172,9 +172,11 @@ int TranslateGoggle(char *filename,char *resultat)
 		wprintf(L"Resultat From Google\n %s \n",data.memory);
 		wprintf(L"***********************************\n");
 
+
 		{
 			//parsing with regex
 			struct slre_cap caps[2];
+			
 
 			//Have a result with confidence ?
 			if (slre_match("{\"transcript\":\"([^\"]+)\",\"confidence\":([0-9\.]+)}", data.memory, data.size, caps, 2, 0) > 0)
@@ -187,14 +189,21 @@ int TranslateGoggle(char *filename,char *resultat)
 				tmp2 = (char *)malloc((caps[1].len + 1) * sizeof(char));
 				strncpy(tmp2, caps[1].ptr, caps[1].len);
 				strncpy(tmp2 + caps[1].len, "\0", 1);
+				if (caps[1].len > 4)
+				{
+					tmp2 += 2;
+					tmp2[2] = '\0';
+				}
 
-				bestscore = 1 + (100 * atof(tmp2));
+				bestscore = 1 + (atoi(tmp2));
 				
 			}
 			else
 			{
+				char *Pmemory = data.memory;
+
 				// ok nevermind, add all the other results
-				while (slre_match("{\"transcript\":\"([^\"]+)\"}", data.memory, data.size, caps, 1, 0) > 0)
+				while (slre_match("{\"transcript\":\"([^\"]+)\"}", Pmemory, data.size, caps, 1, 0) > 0)
 				{
 					char *tmp1;
 					int l;
@@ -215,7 +224,7 @@ int TranslateGoggle(char *filename,char *resultat)
 					}
 
 					l = caps[0].ptr + caps[0].len - data.memory;
-					data.memory += l;
+					Pmemory += l;
 					data.size -= l;
 
 					bestscore = 50;
@@ -226,6 +235,8 @@ int TranslateGoggle(char *filename,char *resultat)
 		curl_easy_cleanup(curl);
 
 	}
+
+	free(data.memory);
 
 	return bestscore;
 }

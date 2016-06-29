@@ -290,6 +290,9 @@ void cTraitement::ManageAction(char *c)
 				else
 				{
 					struct tm *Al = localtime(&crt);
+
+					if (Al->tm_hour > (temps / 60)) Al->tm_yday++;
+
 					Al->tm_hour = (int)(temps / 60);
 					Al->tm_min = temps - Al->tm_hour * 60;
 					crtAlarme = mktime(Al);
@@ -317,6 +320,19 @@ void cTraitement::ManageAction(char *c)
 		else if (strcmp("MUSIQUE", Key) == 0)
 		{
 			parle(L"Demarrage de la radio");
+		}
+		else if (strcmp("CINEMA", Key) == 0)
+		{
+			wchar_t Str[400];
+			wchar_t Liste_film[300];
+
+			wcscpy(Str, L"Les films de la semaine sont ");
+
+			GetFilmCinema(Liste_film,300);
+
+			wcscat(Str, Liste_film);
+			parle(Str);
+			
 		}
 		else if (strcmp("SHELLEXECUTE", Key) == 0)
 		{
@@ -389,7 +405,9 @@ int cTraitement::traite(char *commande2)
 	commande[strlen(commande) + 1] = '\0';
 	CleanCommand(commande);
 
+	SP();
 	Mywprintf(L"\033[0;31mPhrase reconnue : %s\033[0;37m\n", commande);
+	SP();
 
 	for (i = 0; i < NbreCommand; i++)
 	{

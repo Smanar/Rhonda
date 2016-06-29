@@ -260,7 +260,7 @@ int cMatrixLed::ClearMatrix(void)
 int cMatrixLed::CloseMatrix(void)
 {
 	// Closing file and turning off Matrix
-	wprintf(L"\033[0;31mClosing file and turning off the LED Matri\033[0;37m\n");
+	wprintf(L"\033[0;31mClosing file and turning off the LED Matrix\033[0;37m\n");
 
 #ifndef _WIN32
 

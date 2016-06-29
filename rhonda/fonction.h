@@ -34,7 +34,7 @@ const wchar_t *wtimestamp(void);
 const char * timestamp(void);
 
 void Wait(int sec);
-
+void SP(void);
 
 #ifdef __cplusplus
 }

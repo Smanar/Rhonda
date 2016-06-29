@@ -10,7 +10,7 @@ No comment yet
 #endif
 
 /* Special options*/
-//#define DEBUG
+#define DEBUG
 #define SNOWBOY
 
 
@@ -41,8 +41,8 @@ No comment yet
 #include "fonction.h"
 #include "applications.h"
 
-#include "libs/pugixml.hpp"
 
+#include "libs/pugixml.hpp"
 
 /***********************************************************************/
 
@@ -96,14 +96,11 @@ int main(int argc, char* argv[]) {
 	int Numchannel = 1;
 	int Bitpersample = 16;
 
-
 	bool HotWord = false;
 
 	Resultat[0] = '\0';
 
-
 	/************************************************/
-
 
 
 	if (argc > 1)
@@ -116,7 +113,7 @@ int main(int argc, char* argv[]) {
 		}
 		else
 		{
-			Mywprintf(L"FNon compris : %s\n", argv[1]);
+			Mywprintf(L"Non compris : %s\n", argv[1]);
 		}
 		return 0;
 	}
@@ -160,9 +157,12 @@ int main(int argc, char* argv[]) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	if (setlocale(LC_ALL, "fr_FR") == NULL) setlocale(LC_ALL, "fr_FR.utf8");
 
+	//Works on some Pi but not all ?????
+	//if (setlocale(LC_ALL, "fr_FR") == NULL) setlocale(LC_ALL, "fr_FR.utf8");
+	setlocale(LC_ALL, "fr_FR.utf8");
 
+	
 	// Initializes PortAudio wrapper for snowboy. You may use other tools to capture the audio.
 	PortAudioWrapper pa_wrapper(Samplerate, Numchannel, Bitpersample);
 	if (!(pa_wrapper.ready))
@@ -176,13 +176,17 @@ int main(int argc, char* argv[]) {
 	//TranslateGoggle("vvv", Resultat);
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
-	cTraitement.traite("que veut dire livre");
+	//cTraitement.traite("previens moi dans une minute");
+
+	cTraitement.traite("quoi au cinema");
+
+
 #ifdef _WIN32
 	system("pause");
 #endif
 	return 0;
 #endif
-
+	 
 
 
 	/****************************************************/
@@ -220,7 +224,7 @@ int main(int argc, char* argv[]) {
 		
 			if (data.size() != 0) {
 				int result = detector.RunDetection(data.data(), data.size());
-				if (result > 0) {
+				if (result == 1) {
 					int vide = 10;
 					wprintf(L"Hotword detected %d\n",result);
 
@@ -296,7 +300,8 @@ int main(int argc, char* argv[]) {
 			err = TranslateGoggle(RamTmpFile, Resultat);
 
 			wprintf(L"***********************************\n");
-			wprintf(L"Resultat with a score of (%d): %s\n", err , Resultat);
+			wprintf(L"Resultat with a score of (%d)\n", err);
+			Mywprintf(L"%s\n", Resultat);
 			wprintf(L"***********************************\n");
 
 			if (err != 0)
@@ -319,9 +324,12 @@ int main(int argc, char* argv[]) {
 
 	}
 
+	Savedata();
+
 	wprintf(L"Exiting\n");
 
 	return 0;
+
 }
 
 
@@ -336,11 +344,12 @@ int main(int argc, char* argv[]) {
 #include <iostream>
 bool LoadConfig(void)
 {
+
 	int max;
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file("config.xml");
-	wprintf(L"\033[0;31mLoading config XML %s\n\033[0;37m\n", result.description());
+	wprintf(L"\033[0;31mLoading config XML %s\033[0;37m\n", result.description());
 	if (result.status != 0) return false;
 
 	pugi::xml_node panels = doc.child("mesh");
@@ -463,3 +472,5 @@ int main2(int argc, char* argv[]) {
 	}
 }
 #endif
+
+/*************************************************************************************************/

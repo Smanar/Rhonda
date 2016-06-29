@@ -15,4 +15,7 @@ void lireshell(char *command);
 
 int CheckMail(void);
 void SetMailUserPass(char *u, char *p);
+int GetFilmCinema(wchar_t *s,int l);
+
+void Savedata(void);
 

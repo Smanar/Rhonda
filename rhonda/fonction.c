@@ -563,6 +563,9 @@ int Findhour2(char *str)
 	int hour;
 	int minut;
 
+	//au cas ou
+	ConvertionChiffre(str);
+
 	//Petit raccourcis pour les valeur speciale */
 	if (mystrstr(str, "midi")) return 12 * 60;
 	if (mystrstr(str, "un quart d'heure")) return 15;
@@ -627,7 +630,7 @@ static char *ListDizaine[]=
 static char *ListUnite[]=
 {
 	("zero"),
-	("un"),
+	("une"),
 	("deux"),
 	("trois"),
 	("quatre"),
@@ -724,6 +727,7 @@ int ConvertionChiffre(char * string)
 
 		if (chiffre == 0 )
 		{
+			len2 = strlen(chainWord);
 			strncpy(NewString,chainWord,len2);
 			NewString = NewString + len2;
 			NewString[0] = ' ';
@@ -792,4 +796,9 @@ void Wait(int sec)
 #else
 	usleep(sec * 1000);
 #endif
+}
+
+void SP(void)
+{
+	wprintf(L"***********************************************************\n");
 }

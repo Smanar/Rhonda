@@ -6,6 +6,7 @@
         <ville>paris</ville>
         <mailuser>user</mailuser>
         <mailpass>pass</mailpass>
+        <cinemaurl>http://www.commeaucinema.com/rsspage.php?feed=cine</cinemaurl>
     </config>
     <!-- configuration du son-->
     <!-- Gain_record = gain a appliquer au micro durant enregistrement -->
@@ -33,9 +34,11 @@
         <LC command="mail/*QUESTION *ACTION//" action = "9" />
         <LC command="*ACTION musique///" action = "10" />
         <LC command="toi/des connecte deconnecte//" action = "11" />
-        <LC command="test(es) commande/speciale//" action = "12" />
+        <LC command="execute commande/speciale//" action = "12" />
+        <LC command="lis commande/speciale//" action = "13" />
         <LC command="allume lumiere///" action = "14" />
         <LC command="etein(ts) lumiere///" action = "15" />
+        <LC command="*QUESTION au cinema///" action = "16" />
     </commandlist>
     <!-- dictionnaire special -->
     <special>
@@ -62,6 +65,7 @@
         <ACT index="13" action="SHELLLIRE shell/test.sh" />
         <ACT index="14" action="TRANSMITTER 2 01478162 0 on" />
         <ACT index="15" action="TRANSMITTER 2 01478162 0 off" />
+        <ACT index="16" action="CINEMA" />
     </action>
     <!-- icones pour la matrice -->
     <!-- 1=sablier 2=micro 3=smiley 4=interrogation 5/6=anim alien 7=coeur -->
