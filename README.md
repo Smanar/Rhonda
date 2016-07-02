@@ -103,3 +103,6 @@ Dans le xml mettez
         <sensibility>0.5,0.5</sensibility>
 
 Ceci pour eviter les faux positifs, en fait au declenchement du premier mot, vous avec 5/6s seconde pour declencher le second, sinon il repart a zero.
+
+Plus d'information pour les francais ici https://github.com/Smanar/Rhonda/wiki
+
