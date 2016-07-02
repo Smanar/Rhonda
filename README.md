@@ -22,7 +22,7 @@ So firstly, I know the code is ugly, but this project was written in shell then 
 
 **You need:**
 
-- A raspberry, (I m using a B version) with a working microphone and audio.
+- A raspberry, (I m using a B version) with a working microphone and audio. I have made my test with a dongle that make output and input in same time like this one https://www.adafruit.com/product/1475 it doesn't work yet with Jack.
 - A 8*8 matrix, 3 colors.
 - A 433Mhz transmitter.
 
