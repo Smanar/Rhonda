@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include <ctime>
 #include <stdio.h>
 #include <wchar.h>
 
 #include "applications.h"
 #include "fonction.h"
+#include "prog.h"
 
 #include "libs/slre.h"
 
@@ -20,32 +21,246 @@
 
 int PlayWave(char * file);
 
+
+
+/********************************************/
+#define MAX_ALARM 50
+
+time_t Event_time = 0;
+char *Event_Message;
+
+class cAlarm
+{
+public:
+
+	//constructeur
+	cAlarm();
+
+	// Méthodes
+	int AddAlarm(char *,char *);
+	int SetUpAlarm(void);
+
+	time_t ComputeAlarm(char *t);
+	//destructeur
+	~cAlarm();
+
+private:
+	// Attributs
+	char *ActionAlarm[MAX_ALARM];
+	time_t TimeAlarm[MAX_ALARM];
+	char MemTimer[MAX_ALARM][15];
+};
+
+int cAlarm::SetUpAlarm(void)
+{
+	int i;
+	time_t crt = time(NULL);
+
+	Event_time = 0;
+
+	for (i = 0; i < MAX_ALARM; i++)
+	{
+		if (TimeAlarm[i] != 0)
+		{
+			//alarme perimee
+			if (TimeAlarm[i] < crt)
+			{
+				//Est elle renouvelable ?
+				if (charisinstring(MemTimer[i],'X') )
+				{
+					//on recalcule la nouvelle heure
+					TimeAlarm[i] = ComputeAlarm(MemTimer[i]);
+					//prbleme le calcule nous donne une huere plus petite
+					if (TimeAlarm[i] < crt)
+					{
+						wprintf(L"Wrong calcul for new event\n");
+						//forget it
+						TimeAlarm[i] = 0;
+						free(ActionAlarm[i]);
+
+					}
+				}
+				else
+				{
+					TimeAlarm[i] = 0;
+					free(ActionAlarm[i]);
+				}
+			}
+
+			//alarme plus precoce que celle memorisee ?
+			if (((TimeAlarm[i] < Event_time) || (Event_time == 0)) && TimeAlarm[i] != 0 )
+			{
+				Event_time = TimeAlarm[i];
+				Event_Message = ActionAlarm[i];
+			}
+		}
+	}
+
+	//There is a new alarm ?
+	if (TimeAlarm[i] != 0)
+	{
+		Mywprintf(L"Next event : %s", Event_Message);
+		Mywprintf(L" at %s", asctime(localtime(&Event_time)));
+	}
+
+
+	return true;
+}
+
+/* Format YY/MM/DD/HH/MM     */
+//tm_wday tm_yday ignoree pr mktime
+time_t cAlarm::ComputeAlarm(char *t)
+{
+	time_t crt = time(NULL);
+	struct tm T;
+	char tmp[3] = { '\0' };
+	int lastundefined = 0;
+	time_t tmptime;
+
+	if (strlen(t) != 14)
+	{
+		wprintf(L"wrong format for alarm time\n");
+		return 0;
+	}
+
+	T = *localtime(&crt);
+
+	strncpy(tmp, t, 2);
+	if (tmp[0] != 'X') T.tm_year = atoi(tmp) + 100;
+	else lastundefined = 1;
+	t += 3;
+	strncpy(tmp, t, 2);
+	if (tmp[0] != 'X') T.tm_mon = atoi(tmp) - 1;
+	else lastundefined = 2;
+	t += 3;
+	strncpy(tmp, t, 2);
+	if (tmp[0] != 'X') T.tm_mday = atoi(tmp);
+	else lastundefined = 3;
+	t += 3;
+	strncpy(tmp, t, 2);
+	if (tmp[0] != 'X') T.tm_hour = atoi(tmp);
+	else lastundefined = 4;
+	t += 3;
+	strncpy(tmp, t, 2);
+	if (tmp[0] != 'X') T.tm_min = atoi(tmp);
+	else lastundefined = 5;
+
+	tmptime = mktime(&T);
+
+	if (tmptime > crt) return tmptime;
+
+	//ok le nouveau temps calcule est deja passee
+	switch (lastundefined)
+	{
+		case 1: T.tm_year += 1; break;
+		case 2: T.tm_mon += 1; break;
+		case 3: T.tm_mday += 1; break;
+		case 4: T.tm_hour += 1; break;
+		case 5: return 0;
+		default: return 0;
+	}
+	
+	return mktime(&T);
+}
+
+
+int cAlarm::AddAlarm(char *t, char * action)
+{
+	int index = 0;
+	int l;
+
+	while (ActionAlarm[index] != NULL) index++;
+	if (index > MAX_ALARM - 1)
+	{
+		wprintf(L"Too much alarms set\n");
+		return false;
+	}
+
+	strncpy(MemTimer[index], t, 15);
+	TimeAlarm[index] = ComputeAlarm(t);
+
+	l = strlen(action) + 1;
+	ActionAlarm[index] = (char*)malloc(l * sizeof(char));
+	strncpy(ActionAlarm[index], action, l);
+
+	Mywprintf(L"Add event : >>%s", ActionAlarm[index]);
+	Mywprintf(L"<< at %s", asctime(localtime(&TimeAlarm[index])));
+
+	return true;
+}
+
+cAlarm::cAlarm()
+{
+	int i;
+
+	for (i = 0; i < MAX_ALARM; i++)
+	{
+		ActionAlarm[i] = NULL;
+		TimeAlarm[i] = 0;
+	}
+}
+
+cAlarm::~cAlarm()
+{
+	int i;
+	for (i = 0; i < MAX_ALARM; i++)
+	{
+		if (ActionAlarm[i]) free(ActionAlarm[i]);
+	}
+}
+
+
+class cAlarm cAlarm;
+
+
 /*************************************/
 
-time_t Alarme1 = 0;
 
-void SetAlarm(time_t t)
+void SetAlarm(char * t,char * m)
 {
-	char buff[255];
+	cAlarm.AddAlarm(t, m);
+}
 
-	strftime(buff, sizeof(buff), "%H heure et %M minute le %x", localtime(&t));
-	Mywprintf(L"heure alarme : %s\n",buff);
-
-	Alarme1 = t;
+void ResetAlarm(void)
+{
+	cAlarm.SetUpAlarm();
 }
 
 void Checkalarm(void)
 {
 	time_t crt = time(NULL);
-	double diff =  difftime(crt, Alarme1);
+	//double diff = difftime(crt, Event_time);
 
-	wprintf(L"Verifiacation des alarme\n");
+	//wprintf(L"Verifiacation des alarme %d\n", Event_time - crt);
 
-	if ((Alarme1 < crt) && (Alarme1 > 0))
+	if ((Event_time < crt) && (Event_time > 0))
 	{
-		parle(L"Alarme declenchee");
-		Alarme1 = 0;
+		Mywprintf(L"%s Programmed event triggered\n", timestamp());
+		ManageEvent(Event_Message);
+		cAlarm.SetUpAlarm();
 	}
+}
+/*******/
+
+bool LoadData(void)
+{
+	//not enabled yet
+	return true;
+
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file("data.xml");
+	wprintf(L"\033[0;31mLoading Alarm XML %s\033[0;37m\n", result.description());
+	if (result.status != 0) return false;
+
+	pugi::xml_node panels = doc.child("MyRoot");
+
+	//alarm
+	for (pugi::xml_node panel = panels.child("Alarm").first_child(); panel; panel = panel.next_sibling())
+	{
+		cAlarm.AddAlarm((char *)panel.attribute("time").value() , (char *)panel.attribute("action").value());
+	}
+
+	return true;
 }
 
 /******************************************************/
@@ -142,7 +357,6 @@ int GetDefinition(char *mot, wchar_t * def)
 int GetFilmCinema(wchar_t *s, int len)
 {
 	struct slre_cap caps[1];
-	char url[255];
 	char *html;
 	char buff[300];
 	char *posbuf = buff;
@@ -217,10 +431,11 @@ int CheckMail(void)
 
 
 std::string exec(const char* cmd) {
-	char buffer[128];
+
 	std::string result = "";
 
 #ifndef _WIN32
+	char buffer[128];
 	FILE* pipe = popen(cmd, "r");
 	if (!pipe) throw wprintf(L"Probleme lancement fichier shell\n");
 	try {
@@ -294,6 +509,8 @@ int parle(const wchar_t *texte)
 
 void Savedata(void)
 {
+	//Not enabled yet
+	return;
 
 	// Generate new XML document within memory
 	pugi::xml_document doc;
@@ -308,13 +525,23 @@ void Savedata(void)
 	// A valid XML doc must contain a single root node of any name
 	auto root = doc.append_child("MyRoot");
 
-
+	pugi::xml_node nodeChild2;
+	pugi::xml_node nodeChild;
+		
+	nodeChild = root.append_child("Remarque");
+	nodeChild.append_child(pugi::node_pcdata).set_value("Laisser des XX a la place des valeurs pr les repetions, ex : XX/XX/XX/07/00 se declenchera tout les jours a 7h00");
+		
+    nodeChild2 = root.append_child("Alarm");
 
 	// Append some child elements below root
 	// Add as last element
-	pugi::xml_node nodeChild = root.append_child("Alarm");
-	nodeChild.append_attribute("time") = "inserted as last child";
-	nodeChild.append_attribute("day") = "111";
+	nodeChild = nodeChild2.append_child("Al");
+	nodeChild.append_attribute("time") = "14/06/16/05/41";
+	nodeChild.append_attribute("action") = "DIRE Test";
+
+	nodeChild = nodeChild2.append_child("Al");
+	nodeChild.append_attribute("time") = "XX/XX/XX/07/00";
+	nodeChild.append_attribute("action") = "DIRE Test tout les jours";
 #if 0
 	// Add as last element
 	nodeChild = root.append_child("Alarm");

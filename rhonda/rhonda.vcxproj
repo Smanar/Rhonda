@@ -38,6 +38,7 @@
     <ClInclude Include="jsmn.h" />
     <ClInclude Include="libs\slre.h" />
     <ClInclude Include="libs\snowboy-detect.h" />
+    <ClInclude Include="prog.h" />
     <ClInclude Include="traitement.h" />
     <ClInclude Include="translategoogle.h" />
     <ClInclude Include="uart.h" />

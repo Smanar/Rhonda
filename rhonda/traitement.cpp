@@ -247,9 +247,8 @@ void cTraitement::ManageAction(char *c)
 		{
 			wchar_t Str[400];
 			wchar_t tmp[255];
-			wcsncpy(Str, L"La m\u00e9t\u00e9o de demain sera ", 400);
 			GetMeteo(tmp);
-			wcscat(Str, tmp);
+			swprintf(Str, 400, L"La m\u00e9t\u00e9o de demain sera %S", tmp);
 			parle(Str);
 		}
 		else if (strcmp("DEFINITION", Key) == 0)
@@ -282,8 +281,10 @@ void cTraitement::ManageAction(char *c)
 
 			if (temps)
 			{
+				char format[20];
 				time_t crt = time(NULL);
 				time_t crtAlarme;
+				struct tm T;
 
 				/* Rajoute du temps en minutes */
 				if (strcmp("RAPPELDANS", Key) == 0) crtAlarme = crt + temps *60;
@@ -297,11 +298,15 @@ void cTraitement::ManageAction(char *c)
 					Al->tm_min = temps - Al->tm_hour * 60;
 					crtAlarme = mktime(Al);
 				}
+				
+				T = *localtime(&crtAlarme);
+				strftime(format, 20, "%y/%m/%d/%H/%M", &T);
 
-				SetAlarm(crtAlarme);
+				SetAlarm(format, "DIRE Alarme programm\u00e9e");
+				ResetAlarm();
 
 				strftime(buf, sizeof(buf), "%H heure et %M minute", localtime(&crtAlarme));
-				Myswprintf(Str, 400, L"Alarme declenchee pour %s", (wchar_t *)buf);
+				Myswprintf(Str, 400, L"Alarme rajout\u00e9 pour %s", (wchar_t *)buf);
 				parle(Str);
 			}
 			else
@@ -341,6 +346,10 @@ void cTraitement::ManageAction(char *c)
 		else if (strcmp("SHELLLIRE", Key) == 0)
 		{
 			lireshell(Param);
+		}
+		else if (strcmp("SHOWICON", Key) == 0)
+		{
+			_DisplayIcone(atoi(Param));
 		}
 		else if (strcmp("TRANSMITTER", Key) == 0)
 		{

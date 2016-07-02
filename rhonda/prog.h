@@ -7,3 +7,4 @@ bool LoadConfig(void);
 int _DisplaySpectro(int val);
 int _DisplayIcone(int val);
 int PlayWave(char * file);
+int ManageEvent(char* c);

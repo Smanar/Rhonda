@@ -15,7 +15,7 @@
         <model>resources/snowboy.umdl</model>
         <sensibility>0.5</sensibility>
         <Gain_record>2</Gain_record>
-        <Min_amplitude>2500</Min_amplitude>
+        <Min_amplitude>2000</Min_amplitude>
     </sound_engine>
     <!-- syntaxe  = > Requit/possible/option/interdit -->
     <!-- (ser) lettre possible dans le mot, inutile pr pluriels car deja geres -->
@@ -39,6 +39,7 @@
         <LC command="allume lumiere///" action = "14" />
         <LC command="etein(ts) lumiere///" action = "15" />
         <LC command="*QUESTION au cinema///" action = "16" />
+        <LC command="affiche icone tete///" action = "17" />
     </commandlist>
     <!-- dictionnaire special -->
     <special>
@@ -66,9 +67,10 @@
         <ACT index="14" action="TRANSMITTER 2 01478162 0 on" />
         <ACT index="15" action="TRANSMITTER 2 01478162 0 off" />
         <ACT index="16" action="CINEMA" />
+        <ACT index="17" action="SHOWICON 3" />
     </action>
     <!-- icones pour la matrice -->
-    <!-- 1=sablier 2=micro 3=smiley 4=interrogation 5/6=anim alien 7=coeur -->
+    <!-- 1=sablier 2=micro 3=smiley 4=interrogation 5/6=anim alien 7=coeur 8=clock 9=mail-->
     <matrixicon>
         <MAT index="1" data="00YYYYY0 00Y000Y0 000YYY00 0000Y000 000Y0Y00 00Y0Y0Y0 00YYYYY0 00000000" />
         <MAT index="2" data="0YY00000 YY0Y0000 YYYY0000 0YY0Y000 000YYY00 0000YYY0 00000YY0 0000000Y" />
@@ -77,6 +79,15 @@
         <MAT index="5" data="00G00G00 00G00G00 0GGGGGG0 GG0GG0GG GGGGGGGG GGGGGGGG G0G00G0G 00G00G00" />
         <MAT index="6" data="00G00G00 G0G00G0G GGGGGGGG GG0GG0GG GGGGGGGG 0GGGGGG0 00G00G00 0G0000G0" />
         <MAT index="7" data="00000000 0RR00RR0 RRRRRRRR RRRRRRRR RRRRRRRR 0RRRRRR0 00RRRR00 000RR000" />
+        <MAT index="8" data="00GGGG00 0G0000G0 G00G000G G00G000G G00GGG0G G000000G 0G0000G0 00GGGG00" />
+        <MAT index="9" data="00000000 YYYYYYYY YY0000YY Y0Y00Y0Y Y00YY00Y Y0Y00Y0Y YYYYYYYY 00000000" />
     </matrixicon>
+    <!-- Event programmes, a repeter, si il ne doivent apparaitre qu'une fois, utiliser l'autre fichier xml (data.xml) -->
+    <!-- Laisser des XX a la place des valeurs pr les repetions, ex : XX/XX/XX/07/00 se declenchera tout les jours a 7h00 -->
+    <!-- Format YY/MM/DD/HH/MM  -->
+    <Event>
+        <Al time="XX/XX/XX/07/00" action="DIRE bone journee" />
+        <Al time="XX/XX/XX/XX/10" action="SHOWICON 8 | DIRE test" />
+    </Event>
 </mesh>
 <?include somedata?>

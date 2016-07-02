@@ -203,7 +203,7 @@ PortAudioWrapper::PortAudioWrapper(int sample_rate, int num_channels, int bits_p
 	num_lost_samples_ = 0;
 	pa_stream_ = NULL;
 	ready = false;
-	min_read_samples_ = sample_rate * 0.1;
+	min_read_samples_ = (int)(sample_rate * 0.1);
 	ringbuffer_ = NULL;
 
 	ringbuffer_size = 16384;

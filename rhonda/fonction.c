@@ -104,6 +104,35 @@ char* LectureWeb(char* URL)
 }
 
 
+int check_gmail(char *username, char *password)
+{
+
+	CURL *myHandle;
+	CURLcode result;
+
+	// sendRequest 
+	myHandle = curl_easy_init();
+	curl_easy_setopt(myHandle, CURLOPT_URL, "https://mail.google.com/mail/feed/atom");
+	curl_easy_setopt(myHandle, CURLOPT_FOLLOWLOCATION, 1);
+	//curl_easy_setopt(myHandle, CURLOPT_RETURNTRANSFER, 1);
+	curl_easy_setopt(myHandle, CURLOPT_SSL_VERIFYPEER, 0);
+
+	//curl_setopt(myHandle, CURLOPT_USERPWD, username . ":".password);
+	curl_easy_setopt(myHandle, CURLOPT_USERNAME, username);
+	curl_easy_setopt(myHandle, CURLOPT_PASSWORD, password);
+
+	curl_easy_setopt(myHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+	curl_easy_setopt(myHandle, CURLOPT_ENCODING, "");
+	result = curl_easy_perform(myHandle);
+	curl_easy_cleanup(myHandle);
+
+	curl_global_cleanup();
+
+	//returning retrieved feed
+	return 1;
+}
+
+
 int OpenMailServer(char *username,char *password)
 {
 	char *m_popsAccount = "pop3s://pop.gmail.com:995/"; // try with /1
@@ -164,6 +193,7 @@ int OpenMailServer(char *username,char *password)
         free(chunk.buffer);
     /* always cleanup */ 
 
+	curl_easy_cleanup(myHandle);
     curl_global_cleanup();
 
 	return mail;
@@ -572,7 +602,7 @@ int Findhour2(char *str)
 	if (mystrstr(str, "demie heure")) return 30;
 
 	//heure et minutes
-	if (slre_match(" ([0-9]+)h([0-9]+)", str, strlen(str), caps, 2, 0) > 0)
+	if (slre_match(" ([0-9 ]+)h([0-9 ]+)", str, strlen(str), caps, 2, 0) > 0)
 	{
 		char *tmp;
 
@@ -648,10 +678,11 @@ int ConvertionChiffre(char * string)
 {
 	char * NewString;
 	char * Stringtok;
-	int len = strlen(string) + 1;
-	char Buff[3];
+	int len = strlen(string);
+	char Buff[4]; //max 2 number + 1 espace + \0
 
 	char * NewStringMem;
+	char * MemStringtok;
 	int lenMem;
 
 	char *chainWord;
@@ -659,17 +690,30 @@ int ConvertionChiffre(char * string)
 	int dizaine = 0;
 	int unite = 0;
 	int chiffre;
+	
 
 
-	NewString = (char *)malloc(len * sizeof(char));
-	Stringtok = (char *)malloc(len * sizeof(char));
-	NewStringMem = NewString;
+	NewStringMem = (char *)malloc((len +1 ) * sizeof(char));
+	MemStringtok = (char *)malloc((len + 1) * sizeof(char));
+
+	Stringtok = MemStringtok;
+
+
+	NewString = NewStringMem;
 	memset(NewString,'\0',len);
 
-	strncpy(Stringtok,string,len - 1);
-	Stringtok[len-1] = '\0'; //just to be sure
 
-	chainWord = strtok(Stringtok," ");
+	strncpy(Stringtok,string,len);
+	Stringtok[len] = '\0'; //just to be sure
+
+	chainWord = Stringtok;
+	while ((Stringtok[0] != ' ') && (Stringtok[0] != '\0')) Stringtok++;
+	if (Stringtok[0] == ' ')
+	{
+		Stringtok[0] = '\0';
+		Stringtok++;
+	}
+	else chainWord = NULL;
 
 	while (chainWord != NULL)
 	{
@@ -700,6 +744,7 @@ int ConvertionChiffre(char * string)
 		}
 
 		//special
+		if (strcmp(chainWord, "heure") == 0) { chainWord[1] = '\0'; }
 		if (strcmp(chainWord,"quart") == 0)	{ unite = 15; chiffre = 1; }
 		if (strcmp(chainWord,"demi") == 0) { unite = 30; chiffre = 1; }
 		if (strcmp(chainWord,"onze") == 0)	{ unite = 11; chiffre = 1; }
@@ -712,13 +757,11 @@ int ConvertionChiffre(char * string)
 		if ( (chiffre == 0 ) && ( (unite > 0) || (dizaine > 0) ) )
 		{
 
-			sprintf(Buff,"%d",dizaine + unite);
+			sprintf(Buff,"%d ",dizaine + unite);
 			len2 = strlen(Buff);
 
 			strncpy(NewString,Buff,len2);
 			NewString = NewString + len2;
-			NewString[0] = ' ';
-			NewString++;
 
 			dizaine = 0;
 			unite = 0;
@@ -727,14 +770,36 @@ int ConvertionChiffre(char * string)
 
 		if (chiffre == 0 )
 		{
-			len2 = strlen(chainWord);
-			strncpy(NewString,chainWord,len2);
-			NewString = NewString + len2;
+			if (!strcmp(chainWord, "et") == 0)
+			{
+				len2 = strlen(chainWord);
+				strncpy(NewString, chainWord, len2);
+				NewString[len2] = '\0';
+				NewString = NewString + len2;
+			}
+
+		}
+
+		//Forced to code my own strtok function ...
+		if (Stringtok)
+		{
+			chainWord = Stringtok;
+			while ((Stringtok[0] != ' ') && (Stringtok[0] != '\0')) Stringtok++;
+			if (Stringtok[0] != '\0')
+			{
+				Stringtok[0] = '\0';
+				Stringtok++;
+			}
+			else Stringtok = NULL;
+		}
+		else chainWord = NULL;
+
+		if ((chainWord != NULL) && (chiffre == 0))
+		{
 			NewString[0] = ' ';
 			NewString++;
 		}
 
-		chainWord = strtok(NULL," ");
 
 		/* plus de chaine mais encore un chiffre memorise */
 		if ((chainWord == NULL)  && ( (unite > 0) || (dizaine > 0) ) )
@@ -744,8 +809,6 @@ int ConvertionChiffre(char * string)
 
 			strncpy(NewString,Buff,len2);
 			NewString = NewString + len2;
-			NewString[0] = ' ';
-			NewString++;
 		}
 
 	}
@@ -754,7 +817,10 @@ int ConvertionChiffre(char * string)
 	strncpy(string,NewStringMem,lenMem);
 	string[lenMem] = '\0';
 
-	return atoi(string);
+	free(NewStringMem);
+	free(MemStringtok);
+
+	return 1;
 }
 
 /****************************************/

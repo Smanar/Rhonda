@@ -1,11 +1,14 @@
 #include <stdio.h>
+#include <wchar.h>
 
-void SetAlarm(time_t t);
+void SetAlarm(char *, char *);
 void Checkalarm(void);
+void ResetAlarm(void);
+
+bool LoadData(void);
 
 void SetCity(char *s);
 int GetMeteo(wchar_t *s);
-
 
 int GetDefinition(char *,wchar_t *);
 int parle(const wchar_t *texte);

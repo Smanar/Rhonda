@@ -10,7 +10,7 @@ No comment yet
 #endif
 
 /* Special options*/
-#define DEBUG
+//#define DEBUG
 #define SNOWBOY
 
 
@@ -22,7 +22,6 @@ No comment yet
 #include <portaudio.h>
 #include <string>
 #include <vector>
-
 
 
 #ifdef SNOWBOY
@@ -108,8 +107,8 @@ int main(int argc, char* argv[]) {
 		wprintf(L"\033[0;32mPassage d'arguments\033[0;37m\n");
 		if (argv[1][1] = 't')
 		{
-			wprintf(L"Forcage transmetter\n");
-			TestTransmitter(2,1478162,0,"on");
+			wprintf(L"Forcage transmetter eg -t 2 1478162 0 on\n");
+			TestTransmitter(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]), argv[5]);
 		}
 		else
 		{
@@ -178,7 +177,7 @@ int main(int argc, char* argv[]) {
 	//parle(L"test m\u00e9t\u00e9o");
 	//cTraitement.traite("previens moi dans une minute");
 
-	cTraitement.traite("quoi au cinema");
+	cTraitement.traite("que va etre la meteo de demain");
 
 
 #ifdef _WIN32
@@ -187,7 +186,9 @@ int main(int argc, char* argv[]) {
 	return 0;
 #endif
 	 
+	LoadData();
 
+	ResetAlarm();
 
 	/****************************************************/
 	/***********             Main loop                 **/
@@ -270,7 +271,7 @@ int main(int argc, char* argv[]) {
 			}
 #endif
 
-			//Verification alarme
+			//Event Verification, I don't use special thread to prevent multiples actions in same time
 			if (cycle % 800 == 0) Checkalarm();
 
 			//Alerte programmee
@@ -401,6 +402,12 @@ bool LoadConfig(void)
 		cTraitement.AddAction((char *)panel.attribute("action").value(), atoi((char *)panel.attribute("index").value()));
 	}
 
+	//Programmable event, repetive only
+	for (pugi::xml_node panel = panels.child("Event").first_child(); panel; panel = panel.next_sibling())
+	{
+		SetAlarm((char *)panel.attribute("time").value(), (char *)panel.attribute("action").as_string());
+	}
+
 	return true;
 }
 
@@ -422,6 +429,12 @@ int _DisplayIcone(int val)
 int PlayWave(char * file)
 {
 	return cPlay.PlayWav(file);
+}
+
+int ManageEvent(char* c)
+{
+	cTraitement.ManageAction(c);
+	return true;
 }
 
 /*******************************************/

@@ -16,6 +16,7 @@ extern "C" {
 
 char* LectureWeb(char* URL);
 int OpenMailServer(char *username,char *password);
+int check_gmail(char *username, char *password);
 
 int GetWord(char * reg, char *str, char *res,int l);
 int Findhour(char *str);
