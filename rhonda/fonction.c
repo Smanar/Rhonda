@@ -85,22 +85,25 @@ char* LectureWeb(char* URL)
 	  LectureLC.size=1;
   }
 
+  Chaine = (char*)malloc((LectureLC.size + 1) * sizeof(char));
+
   if(LectureLC.buffer)
   {
-
-	Chaine = (char*)malloc((LectureLC.size + 1) * sizeof (char));
 
 	strcpy(Chaine, LectureLC.buffer); 
 	strcat(Chaine,"\0");
 
-	free(LectureLC.buffer);
-	LectureLC.buffer = NULL;
-
-	return Chaine;
   }
+  else
+  {
+	  Chaine[0] = '\0';
+  }
+
+  free(LectureLC.buffer);
+  LectureLC.buffer = NULL;
   
  
-  return NULL;
+  return Chaine;
 }
 
 

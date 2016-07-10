@@ -16,7 +16,6 @@
     <ClCompile Include="flac.c" />
     <ClCompile Include="fonction.c" />
     <ClCompile Include="hardware.cpp" />
-    <ClCompile Include="libs\jsmn.c" />
     <ClCompile Include="libs\portaudio\pa_debugprint.c" />
     <ClCompile Include="libs\portaudio\pa_front.c" />
     <ClCompile Include="libs\portaudio\pa_hostapis.c" />
@@ -35,7 +34,6 @@
     <ClInclude Include="flac.h" />
     <ClInclude Include="fonction.h" />
     <ClInclude Include="hardware.h" />
-    <ClInclude Include="jsmn.h" />
     <ClInclude Include="libs\slre.h" />
     <ClInclude Include="libs\snowboy-detect.h" />
     <ClInclude Include="prog.h" />

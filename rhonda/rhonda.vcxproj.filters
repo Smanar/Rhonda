@@ -39,9 +39,6 @@
     <ClCompile Include="uart.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="libs\jsmn.c">
-      <Filter>libs</Filter>
-    </ClCompile>
     <ClCompile Include="libs\portaudio\pa_debugprint.c">
       <Filter>libs</Filter>
     </ClCompile>
@@ -81,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fonction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="jsmn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="libs\slre.h">

@@ -35,7 +35,7 @@
         <LC command="*ACTION musique///" action = "10" />
         <LC command="toi/des connecte deconnecte//" action = "11" />
         <LC command="execute commande/speciale//" action = "12" />
-        <LC command="lis commande/speciale//" action = "13" />
+        <LC command="*INFO systeme/*INFORMATION *QUESTION//" action = "13" />
         <LC command="allume lumiere///" action = "14" />
         <LC command="etein(ts) lumiere///" action = "15" />
         <LC command="*QUESTION au cinema///" action = "16" />
@@ -47,6 +47,7 @@
         <SPE command="*INFORMATION" word="lit est sera donne" />
         <SPE command="*QUESTION" word="quoi qu que quelle quel combien" />
         <SPE command="*ALARME" word="rappelle previens reveille" />
+        <SPE command="*INFO" word="info information" />
     </special>
     <!-- action a faire -->
     <!-- Separer les actions par | -->
@@ -63,7 +64,7 @@
         <ACT index="10" action="MUSIQUE" />
         <ACT index="11" action="DIRE a plus tard | EXIT" />
         <ACT index="12" action="SHELLEXECUTE shell/test2.sh" />
-        <ACT index="13" action="SHELLLIRE shell/test.sh" />
+        <ACT index="13" action="SHELLLIRE shell/infosysteme.sh" />
         <ACT index="14" action="TRANSMITTER 2 01478162 0 on" />
         <ACT index="15" action="TRANSMITTER 2 01478162 0 off" />
         <ACT index="16" action="CINEMA" />

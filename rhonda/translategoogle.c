@@ -12,6 +12,7 @@
 #include "translategoogle.h"
 
 #include "libs/slre.h"
+#include "fonction.h"
 
 
 char GoogleApiKey[40];
@@ -168,9 +169,9 @@ int TranslateGoggle(char *filename,char *resultat)
 
 		res = curl_easy_perform(curl);
 
-		wprintf(L"***********************************\n");
 		wprintf(L"Resultat From Google\n %s \n",data.memory);
-		wprintf(L"***********************************\n");
+		
+		SP();
 
 
 		{
@@ -206,21 +207,35 @@ int TranslateGoggle(char *filename,char *resultat)
 				while (slre_match("{\"transcript\":\"([^\"]+)\"}", Pmemory, data.size, caps, 1, 0) > 0)
 				{
 					char *tmp1;
+					char *tmp2;
 					int l;
 
 					tmp1 = (char *)malloc((caps[0].len + 1) * sizeof(char));
 					strncpy(tmp1, caps[0].ptr, caps[0].len);
 					strncpy(tmp1 + caps[0].len, "\0", 1);
 
-					//TODO : Need to check word and not complete string
-					if (!strstr(resultat, tmp1))
+					tmp2 = tmp1;
+					while (tmp2)
 					{
-						int l = strlen(resultat) + strlen(tmp1) + 1;
-						if (l < 254)
+						while ((tmp2[0] != ' ') && (tmp2[0] != '\0')) tmp2++;
+						if (tmp2[0] != '\0')
 						{
-							strcat(resultat," ");
-							strcat(resultat, tmp1);
+							tmp2[0] = '\0';
+							tmp2++;
 						}
+						else tmp2 = NULL;
+						
+						if (!strstr(resultat, tmp1))
+						{
+							int l = strlen(resultat) + strlen(tmp1) + 1;
+							if (l < 254)
+							{
+								strcat(resultat, " ");
+								strcat(resultat, tmp1);
+							}
+						}
+
+						if (tmp2) tmp1 = tmp2;
 					}
 
 					l = caps[0].ptr + caps[0].len - data.memory;

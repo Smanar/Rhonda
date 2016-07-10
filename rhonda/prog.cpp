@@ -58,6 +58,9 @@ int HotWordModel = 1;
 
 /***********************************************************************/
 
+bool bMusicActive = false;
+bool bExit = false;
+
 //Initailisation classes
 class cTraitement cTraitement;
 class cMatrixLed cMatrixLed;
@@ -72,14 +75,6 @@ char RamTmpFile[] = "testfile.flac";
 char RamTmpFile[] = "/dev/shm/testfile.flac";
 #endif
 
-
-
-
-bool bExit = false;
-void Exit(void)
-{
-	bExit = true;
-}
 
 
 int main(int argc, char* argv[]) {
@@ -177,23 +172,20 @@ int main(int argc, char* argv[]) {
 	//parle(L"test m\u00e9t\u00e9o");
 	//cTraitement.traite("previens moi dans une minute");
 
-	cTraitement.traite("que va etre la meteo de demain");
+	cTraitement.traite("donne moi les infos systeme systemes");
 
+	bExit = true;
 
-#ifdef _WIN32
-	system("pause");
-#endif
-	return 0;
 #endif
 	 
 	LoadData();
-
 	ResetAlarm();
 
 	/****************************************************/
 	/***********             Main loop                 **/
 	/****************************************************/
 
+	SP();
 
 	wprintf(L"\033[0;32mStarting Main loop\033[0;37m\n");
 
@@ -285,7 +277,7 @@ int main(int argc, char* argv[]) {
 
 		pa_wrapper.Stop();
 
-		parle(L"Oui");
+		parle(L"Oui ?");
 		//Wait(800);
 
 		wprintf(L"Recording\n");
@@ -295,21 +287,21 @@ int main(int argc, char* argv[]) {
 		//err = 0;
 		if (err != 0)
 		{
+			SP();
 
 			wprintf(L"Send to google\n");
 			cMatrixLed.DisplayIcone(SABLIER);
 			err = TranslateGoggle(RamTmpFile, Resultat);
 
-			wprintf(L"***********************************\n");
-			wprintf(L"Resultat with a score of (%d)\n", err);
+			SP();
+			wprintf(L"Resultat with a score of (%d) : ", err);
 			Mywprintf(L"%s\n", Resultat);
-			wprintf(L"***********************************\n");
+			SP();
 
 			if (err != 0)
 			{
 				wprintf(L"Processing\n");
 				cTraitement.traite(Resultat);
-
 			}
 			else
 			{
@@ -320,7 +312,6 @@ int main(int argc, char* argv[]) {
 
 #ifdef _WIN32
 		bExit = true;
-		system("pause");
 #endif
 
 	}
@@ -328,6 +319,10 @@ int main(int argc, char* argv[]) {
 	Savedata();
 
 	wprintf(L"Exiting\n");
+
+#ifdef _WIN32
+	system("pause");
+#endif
 
 	return 0;
 
@@ -437,6 +432,15 @@ int ManageEvent(char* c)
 	return true;
 }
 
+void SetMusic(bool b)
+{
+	bMusicActive = b;
+}
+
+void Exit(void)
+{
+	bExit = true;
+}
 /*******************************************/
 
 #if 0

@@ -11,9 +11,7 @@
 #include "prog.h"
 
 
-void Exit(void);
-
-
+//#define DEBUG_OUPUT
 
 /************************************************************************/
 /***********************************************/
@@ -166,7 +164,9 @@ void cTraitement::ReconconizeWord(char *wordchain, int *nbre, int *maxmot, char 
 				if (mystrstr(commande, word) != NULL)
 				{
 					*nbre = *nbre + 1;
+#ifdef DEBUG_OUPUT
 					Mywprintf(L"Mot reconnus : %s\n", mot);
+#endif
 				}
 			}
 			free(token);
@@ -175,10 +175,12 @@ void cTraitement::ReconconizeWord(char *wordchain, int *nbre, int *maxmot, char 
 		else
 		{
 			/* Simple recherche de mot */
-			if (mystrstr(commande, mot) != NULL)
+			if (mystrstr(commande, mot) !=  NULL)
 			{
 				*nbre = *nbre + 1;
+#ifdef DEBUG_OUPUT
 				Mywprintf(L"Mot reconnus : %s\n", mot);
+#endif
 			}
 		}
 		*maxmot = *maxmot + 1;
@@ -199,6 +201,8 @@ void cTraitement::ManageAction(char *c)
 
 	TokenCommand = (char *)malloc((strlen(c) + 1) * sizeof(char));
 	strcpy(TokenCommand, c);
+
+	Mywprintf(L"Action a faire : %s\n", c);
 
 	for (Com = strtok(TokenCommand, "|"); Com; Com = strtok(NULL, "|"))
 	{
@@ -325,6 +329,8 @@ void cTraitement::ManageAction(char *c)
 		else if (strcmp("MUSIQUE", Key) == 0)
 		{
 			parle(L"Demarrage de la radio");
+			executesCommand("mpg123 http://streaming.radio.rtl.fr:80/rtl-1-44-96");
+			SetMusic(true);
 		}
 		else if (strcmp("CINEMA", Key) == 0)
 		{
@@ -431,7 +437,9 @@ int cTraitement::traite(char *commande2)
 
 		ptr = CommandeL[i];
 
+#ifdef DEBUG_OUPUT
 		Mywprintf(L"Test chaine : %s\n", ptr);
+#endif
 
 		maxmot = 0;
 		NbrePrioritaire = 0;
@@ -476,7 +484,6 @@ int cTraitement::traite(char *commande2)
 			Mywprintf(L"\033[0;31mCorrespondance trouvee pr la chaine : %s\033[0;37m\n", ptr);
 			Betterscore = mottotal;
 			choix = ActionComL[i];
-			wprintf(L"choix %i\n", choix);
 		}
 
 	}

@@ -90,7 +90,7 @@ bool cMatrixLed::MakeIcon(int index,char* datar)
 
 	int x,y;
 	char *p = datar;
-	short int val;
+	unsigned short int val;
 	char r;
 
 	if (index > 50) return false;
@@ -357,7 +357,7 @@ int cMatrixLed::DisplayIcone(int icon)
 	return true;
 }
 
-static unsigned short int spe[] = { 0, 2, 6, 14, 30, 62, 126, 254, 255 };
+static unsigned short int spe[] = { 0, 1, 3, 7, 15, 4127, 12351, 28735, 61503 };
 
 int cMatrixLed::DisplaySpectro(int val)
 {
@@ -373,9 +373,9 @@ int cMatrixLed::DisplaySpectro(int val)
 	{
 		spectro_bmp[i] = spectro_bmp[i + 1];
 	}
-	val = (int)(val * 8 /100);
-	if (val > 7) val = 7;
 
+	val = (int)(val * 8 /100);
+	if (val > 8) val = 8;
 	spectro_bmp[7] = spe[val];
 
 	displayImage(spectro_bmp, res, daddress, file);

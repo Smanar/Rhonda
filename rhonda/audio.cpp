@@ -405,7 +405,7 @@ int Checkamplitude(long value)
 		{
 			if (Enr_etat != ENR_FINI)
 			{
-				wprintf(L"Trop de silence.\n");
+				wprintf(L"Too much silence.\n");
 				if (Enr_etat == ENR_ENCOURS) Enr_etat = ENR_FINI;
 				else Enr_etat = ENR_RATE;
 			}
@@ -655,7 +655,7 @@ int cRecord::RecordFLAC(const char *fileName, uint32_t duration)
 	while((err = Pa_IsStreamActive(stream)) == 1)
 	{
 		Pa_Sleep(1000);
-		wprintf(L"index = %d\n", data.frameIndex);
+		//wprintf(L"index = %d\n", data.frameIndex);
 	}
 	if (err < 0) return 0;
 
@@ -670,7 +670,7 @@ int cRecord::RecordFLAC(const char *fileName, uint32_t duration)
 
 	if (Enr_etat == ENR_RATE)
 	{
-		wprintf(L"Enregistrement annulle\n");
+		wprintf(L"Recording cancelled\n");
 		return 0;
 	}
 

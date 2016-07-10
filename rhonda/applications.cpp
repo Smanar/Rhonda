@@ -183,8 +183,8 @@ int cAlarm::AddAlarm(char *t, char * action)
 	ActionAlarm[index] = (char*)malloc(l * sizeof(char));
 	strncpy(ActionAlarm[index], action, l);
 
-	Mywprintf(L"Add event : >>%s", ActionAlarm[index]);
-	Mywprintf(L"<< at %s", asctime(localtime(&TimeAlarm[index])));
+	Mywprintf(L"Add event : %s", ActionAlarm[index]);
+	Mywprintf(L" at %s", asctime(localtime(&TimeAlarm[index])));
 
 	return true;
 }
@@ -282,6 +282,7 @@ int GetMeteo(wchar_t *s)
 	strcat(url, ville);
 	
 	char *html = LectureWeb(url);
+
 
 	if (slre_match("fcst_day_1.+?\"condition\":\"([^\"]+)\"",html, strlen(html), caps, 1, 0) > 0)
 	{
@@ -453,6 +454,14 @@ std::string exec(const char* cmd) {
 	return result;
 }
 /***********************************************/
+
+void executesCommand(char *command)
+{
+	Mywprintf(L"Execution de la commande %s:\n", command);
+#ifndef _WIN32
+	system(command);
+#endif
+}
 
 void executeshell(char *command)
 {
