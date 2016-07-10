@@ -398,6 +398,26 @@ int GetFilmCinema(wchar_t *s, int len)
 
 	return true;
 }
+/*******************************************************/
+bool bMusicactive;
+void PlayMusic(bool b)
+{
+	if (b)
+	{
+		executesCommand("mpg123 http://rfm-live-mp3-64.scdn.arkena.com/rfm.mp3 >/dev/null 2>&1 &");
+		bMusicactive = true;
+	}
+	else
+	{
+		executesCommand("killall mpg123");
+		bMusicactive = false;
+	}
+}
+
+void ClearMusic(void)
+{
+	if (bMusicactive) PlayMusic(false);
+}
 
 /*******************************************************/
 
@@ -486,6 +506,8 @@ void lireshell(char *command)
 
 int parle(const wchar_t *texte)
 {
+	ClearMusic();
+
 	//char commande[400];
 	SP();
 	wprintf(L"\033[1;33mPhrase a dire %ls\033[0;37m\n", texte);

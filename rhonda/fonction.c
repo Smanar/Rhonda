@@ -347,6 +347,8 @@ BOOL charisinstring(char *s,char c)
 	return FALSE;
 }
 
+
+//cherche subs dans s
 char* mystrstr(char *s, char *subs) {
 	char *a = s;
 	char *b = subs;
@@ -374,6 +376,12 @@ char* mystrstr(char *s, char *subs) {
 	for( ; *s != '\0'; s++)
 	{
 		if(*s != *b)
+		{
+			continue;
+		}
+
+		//ok on a une lettre identique, mais y avait il un espace avant ?
+		if ( (*(s - 1) != ' ') && ( *s != *a) )
 		{
 			continue;
 		}

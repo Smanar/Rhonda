@@ -94,7 +94,6 @@ static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp)
 	return 0;                          /* no more data left to deliver */
 }
 
-
 int TranslateGoggle(char *filename,char *resultat)
 {
 	CURL *curl;			// curl handle
@@ -225,7 +224,7 @@ int TranslateGoggle(char *filename,char *resultat)
 						}
 						else tmp2 = NULL;
 						
-						if (!strstr(resultat, tmp1))
+						if (!mystrstr(resultat, tmp1))
 						{
 							int l = strlen(resultat) + strlen(tmp1) + 1;
 							if (l < 254)

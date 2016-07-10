@@ -20,8 +20,8 @@
     <!-- syntaxe  = > Requit/possible/option/interdit -->
     <!-- (ser) lettre possible dans le mot, inutile pr pluriels car deja geres -->
     <commandlist>
-        <LC command="*ACTION micro///" action = "1" />
-        <LC command="*INFORMATION *QUESTION heure///" action = "2" />
+        <LC command="*ACTION_ON micro///" action = "1" />
+        <LC command="heure/*INFORMATION *QUESTION//" action = "2" />
         <LC command="*INFORMATION date///" action = "3" />
         <LC command="*INFORMATION combien///" action = "3" />
         <LC command="*QUESTION *ACTION programme tele///" action = "4" />
@@ -31,8 +31,9 @@
         <LC command="*QUESTION veut dire///" action = "6" />
         <LC command="*ALARME a/heure minute heures minutes//" action = "7" />
         <LC command="*ALARME dans/heure heures minutes minute//" action = "8" />
-        <LC command="mail/*QUESTION *ACTION//" action = "9" />
-        <LC command="*ACTION musique///" action = "10" />
+        <LC command="mail/*QUESTION *ACTION_ON//" action = "9" />
+        <LC command="*ACTION_ON musique///" action = "10" />
+        <LC command="*ACTION_OFF musique///" action = "18" />
         <LC command="toi/des connecte deconnecte//" action = "11" />
         <LC command="execute commande/speciale//" action = "12" />
         <LC command="*INFO systeme/*INFORMATION *QUESTION//" action = "13" />
@@ -43,7 +44,8 @@
     </commandlist>
     <!-- dictionnaire special -->
     <special>
-        <SPE command="*ACTION" word="affiche actionne active eteint allume teste verifis" />
+        <SPE command="*ACTION_ON" word="demarre lance(r) affiche actionne active allume teste verifis" />
+        <SPE command="*ACTION_OFF" word="eteint coupe arrette" />
         <SPE command="*INFORMATION" word="lit est sera donne" />
         <SPE command="*QUESTION" word="quoi qu que quelle quel combien" />
         <SPE command="*ALARME" word="rappelle previens reveille" />
@@ -61,7 +63,7 @@
         <ACT index="7" action="RAPPELA" />
         <ACT index="8" action="RAPPELDANS" />
         <ACT index="9" action="CHECKMAIL" />
-        <ACT index="10" action="MUSIQUE" />
+        <ACT index="10" action="MUSIQUE ON" />
         <ACT index="11" action="DIRE a plus tard | EXIT" />
         <ACT index="12" action="SHELLEXECUTE shell/test2.sh" />
         <ACT index="13" action="SHELLLIRE shell/infosysteme.sh" />
@@ -69,6 +71,7 @@
         <ACT index="15" action="TRANSMITTER 2 01478162 0 off" />
         <ACT index="16" action="CINEMA" />
         <ACT index="17" action="SHOWICON 3" />
+        <ACT index="18" action="MUSIQUE OFF" />
     </action>
     <!-- icones pour la matrice -->
     <!-- 1=sablier 2=micro 3=smiley 4=interrogation 5/6=anim alien 7=coeur 8=clock 9=mail-->

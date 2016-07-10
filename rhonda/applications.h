@@ -7,6 +7,9 @@ void ResetAlarm(void);
 
 bool LoadData(void);
 
+void PlayMusic(bool b);
+void ClearMusic(void);
+
 void SetCity(char *s);
 int GetMeteo(wchar_t *s);
 

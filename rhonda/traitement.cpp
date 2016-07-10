@@ -13,10 +13,6 @@
 
 //#define DEBUG_OUPUT
 
-/************************************************************************/
-/***********************************************/
-
-
 /***************************************************************************/
 
 cTraitement::cTraitement()
@@ -155,6 +151,8 @@ void cTraitement::ReconconizeWord(char *wordchain, int *nbre, int *maxmot, char 
 					break;
 				}
 			}
+
+			if (p == NULL) break;
 
 			token = (char *)malloc((strlen(p) + 1) * sizeof(char));
 			strcpy(token, p);
@@ -328,9 +326,16 @@ void cTraitement::ManageAction(char *c)
 		}
 		else if (strcmp("MUSIQUE", Key) == 0)
 		{
-			parle(L"Demarrage de la radio");
-			executesCommand("mpg123 http://streaming.radio.rtl.fr:80/rtl-1-44-96");
-			SetMusic(true);
+			if (strcmp("ON", Param) == 0)
+			{
+				parle(L"D\u00e9marrage de la radio");
+				PlayMusic(true);
+			}
+			else
+			{
+				parle(L"Arret de la radio");
+				PlayMusic(false);
+			}
 		}
 		else if (strcmp("CINEMA", Key) == 0)
 		{

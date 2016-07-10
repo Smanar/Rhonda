@@ -58,7 +58,6 @@ int HotWordModel = 1;
 
 /***********************************************************************/
 
-bool bMusicActive = false;
 bool bExit = false;
 
 //Initailisation classes
@@ -170,9 +169,9 @@ int main(int argc, char* argv[]) {
 	//TranslateGoggle("vvv", Resultat);
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
-	//cTraitement.traite("previens moi dans une minute");
 
-	cTraitement.traite("donne moi les infos systeme systemes");
+	cTraitement.traite("donne-moi l'heure");
+	//TranslateGoggle("c://", Resultat);
 
 	bExit = true;
 
@@ -220,6 +219,9 @@ int main(int argc, char* argv[]) {
 				if (result == 1) {
 					int vide = 10;
 					wprintf(L"Hotword detected %d\n",result);
+
+					ClearMusic();
+
 
 					PlayWave("resources/ding.wav");
 
@@ -430,11 +432,6 @@ int ManageEvent(char* c)
 {
 	cTraitement.ManageAction(c);
 	return true;
-}
-
-void SetMusic(bool b)
-{
-	bMusicActive = b;
 }
 
 void Exit(void)
