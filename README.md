@@ -24,7 +24,7 @@ You can see somes pictures here https://github.com/Smanar/Rhonda/wiki
 
 **You need:**
 
-- A raspberry, (I m using a B version) with a working microphone and audio. I have made my test with a dongle that make output and input in same time like this one https://www.adafruit.com/product/1475 it doesn't work yet with Jack.
+- A raspberry, (I m using a B version) with a working microphone and audio. I have made my test with a dongle that make output and input in same time like this one https://www.adafruit.com/product/1475 I haven't tested it with Jack (I think portaudio need a special compilation with jack enabled).
 - A 8*8 matrix, 3 colors.
 - A 433Mhz transmitter.
 
