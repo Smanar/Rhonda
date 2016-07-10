@@ -24,7 +24,7 @@
         <LC command="heure/*INFORMATION *QUESTION//" action = "2" />
         <LC command="*INFORMATION date///" action = "3" />
         <LC command="*INFORMATION combien///" action = "3" />
-        <LC command="*QUESTION *ACTION programme tele///" action = "4" />
+        <LC command="*QUESTION *ACTION_ON programme tele///" action = "4" />
         <LC command="*QUESTION tele///" action = "4" />
         <LC command="meteo/*QUESTION *INFORMATION demain//" action = "5" />
         <LC command="definition/de mot//" action = "6" />
