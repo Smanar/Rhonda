@@ -6,6 +6,8 @@ It can too command some 433 Mhz devices and use a 8*8 matrix to display some ico
 
 So firstly, I know the code is ugly, but this project was written in shell then in C and finaly in C++, with lot of modifications (unicode, wide char, string), it must be entirely rewritten. And this application isn't multilanguage yet, lot of parts are hard-coded in french.
 
+You can see somes pictures here https://github.com/Smanar/Rhonda/wiki
+
 
 ----------
 
@@ -86,9 +88,9 @@ Open the xml file, and change the &lt;api> tag key to set your own key.
 To get the api key http://www.chromium.org/developers/how-tos/api-keys  
 And then just run the application.
 
-
+>sudo chmod -R 755 shell
 >sudo chmod 755 rhonda  
-> ./rhonda
+>./rhonda
 
 
 ----------
