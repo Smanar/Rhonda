@@ -92,8 +92,17 @@ And then just run the application.
 >sudo chmod 755 rhonda  
 >./rhonda
 
+----------
+
+**How to use it (for unique hotword)**
+- After starting you will have a little animation with alien.
+- Say "snowboy"
+- You will hear a "ding" and the matrix will display a microphone (Wait for the microphone before speaking)
+- Say "Rappelles moi dans une heure", the matrix will display a spectrograph with the sound, you can use it to solve problems.
+- The matrix will display a smiley if all is ok or a "?" if there was a problem.
 
 ----------
+
 **Remarques speciales**
 
 Note pour les utilisateurs francais, le hotword "snowboy" est assez dur a reproduire, du moins pour moi avec mon accent pourri.
