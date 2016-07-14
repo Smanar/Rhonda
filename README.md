@@ -1,8 +1,17 @@
 # Rhonda (under construction)
-Rhondha is just another personal home assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest possible with the minimal access to the SD card as possible.  
+Rhondha is just another personal home assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest/fastest possible with the minimal access to the SD card as possible (and ofc energy power).   
 All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml .  
-Some actions are hard-coded but you can use specials shells scripts for personals actions.  
-It can too command some 433 Mhz devices and use a 8*8 matrix to display some icons.  
+Some actions are hard-coded but you can use specials shells scripts for personals actions.   
+Some example of it can do.    
+- Speech regnition.
+- Vocal synthesis.
+- Command some 433 Mhz devices (like chacon plug)
+- Use a 8*8 matrix to display some icons or a spectrogram with sound during recording.
+- Check meteo/mails/definition/cinema program
+- Launch radio streaming.
+- Memorise alert.   
+
+The engine that process the recognized word, can manage synonymous, forbidden word, obligatory word, so you are not forced to say exactly the same sentence to trigger event. Take a look on the xml file to see how it works.
 
 So firstly, I know the code is ugly, but this project was written in shell then in C and finaly in C++, with lot of modifications (unicode, wide char, string), it must be entirely rewritten. And this application isn't multilanguage yet, lot of parts are hard-coded in french.
 
@@ -98,7 +107,7 @@ And then just run the application.
 - After starting you will have a little animation with alien.
 - Say "snowboy"
 - You will hear a "ding" and the matrix will display a microphone (Wait for the microphone before speaking)
-- Say "Rappelles moi dans une heure", the matrix will display a spectrograph with the sound, you can use it to solve problems.
+- Say "Rappelles moi dans une heure", the matrix will display a spectrogram with the sound, you can use it to solve problems.
 - The matrix will display a smiley if all is ok or a "?" if there was a problem.
 
 ----------
