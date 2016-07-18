@@ -21,7 +21,16 @@ void lireshell(char *command);
 void executesCommand(char*);
 
 int CheckMail(void);
-void SetMailUserPass(char *u, char *p);
+void SetMailUserPass(char *);
+
+void SetGitHubUserPass(char *s);
+int CheckGitHubNotification();
+
+void SendRequest(char *);
+
+void SetRSS_Site(char *s);
+int RSSMonitor();
+
 int GetFilmCinema(wchar_t *s,int l);
 
 void Savedata(void);

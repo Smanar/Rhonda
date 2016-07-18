@@ -14,7 +14,7 @@
     <ClCompile Include="applications.cpp" />
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="flac.c" />
-    <ClCompile Include="fonction.c" />
+    <ClCompile Include="fonction.cpp" />
     <ClCompile Include="hardware.cpp" />
     <ClCompile Include="libs\portaudio\pa_debugprint.c" />
     <ClCompile Include="libs\portaudio\pa_front.c" />
@@ -25,7 +25,7 @@
     <ClCompile Include="libs\slre.c" />
     <ClCompile Include="prog.cpp" />
     <ClCompile Include="traitement.cpp" />
-    <ClCompile Include="translategoogle.c" />
+    <ClCompile Include="translategoogle.cpp" />
     <ClCompile Include="uart.c" />
   </ItemGroup>
   <ItemGroup>

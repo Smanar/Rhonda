@@ -264,13 +264,10 @@ bool LoadData(void)
 }
 
 /******************************************************/
-char ville[20];
-
+std::string ville;
 void SetCity(char *s)
 {
-	int l = strlen(s);
-	if (l > 19) l = 19;
-	strncpy(ville, s, l);
+	ville = s;
 }
 
 int GetMeteo(wchar_t *s)
@@ -279,7 +276,7 @@ int GetMeteo(wchar_t *s)
 	
 	char url[255];
 	strcpy(url, "http://www.prevision-meteo.ch/services/json/");
-	strcat(url, ville);
+	strcat(url, ville.c_str());
 	
 	char *html = LectureWeb(url);
 
@@ -288,12 +285,13 @@ int GetMeteo(wchar_t *s)
 	{
 		if (caps[0].len < 255)
 		{
-			char *tmp = (char *)malloc((caps[0].len + 1) * sizeof(char));
+			char *tmp = (char *)malloc((caps[0].len + 10) * sizeof(char));
 			strncpy(tmp,caps[0].ptr,caps[0].len);
-			strncpy(tmp + caps[0].len ,"\0", 1);
+			tmp[caps[0].len] = '\0';
 			//mbstowcs(s, tmp, caps[0].len+1);
-			mymbstowcs(s, tmp, caps[0].len+1);
+			mymbstowcs(s, tmp, caps[0].len);
 			//swprintf(s, 100, L"%hs", caps[0].ptr);
+			free(tmp);
 		}
 	}
 
@@ -311,7 +309,7 @@ int GetDefinition(char *mot, wchar_t * def)
 	char url[255];
     char *html;
 
-	int Maxlen = 800;
+	//int Maxlen = 800;
 
 	char *search;
 
@@ -335,15 +333,15 @@ int GetDefinition(char *mot, wchar_t * def)
 		char buff[800];
 
 		/* Max 800 char */
-		if (caps[0].len > 800) caps[0].len = 800;
+if (caps[0].len > 800) caps[0].len = 800;
 
-		strncpy(buff,caps[0].ptr,caps[0].len);
-		strncpy(buff + caps[0].len ,"\0", 1);
+strncpy(buff, caps[0].ptr, caps[0].len);
+strncpy(buff + caps[0].len, "\0", 1);
 
 #ifdef _WIN32
-		//UnicodeToAnsi(buff,tmp);
+//UnicodeToAnsi(buff,tmp);
 #endif
-		mymbstowcs(def, buff, caps[0].len);
+mymbstowcs(def, buff, caps[0].len);
 
 	}
 
@@ -363,7 +361,7 @@ int GetFilmCinema(wchar_t *s, int len)
 	char *posbuf = buff;
 	char *posHtml;
 
-	int Maxlen = 800;
+	//int Maxlen = 800;
 	len -= 1;
 
 	html = LectureWeb("http://www.commeaucinema.com/rsspage.php?feed=cine");
@@ -421,28 +419,85 @@ void ClearMusic(void)
 
 /*******************************************************/
 
-char MailUser[50];
-char MailPass[50];
-
-void SetMailUserPass(char *u, char *p)
+void SendRequest(char *url)
 {
-	int l = strlen(u);
-	if (l > 49) l = 49;
-	strncpy(MailUser, u, l);
+	char *html = LectureWeb(url);
 
-	l = strlen(p);
-	if (l > 49) l = 49;
-	strncpy(MailPass, p, l);
+	free(html);
+}
 
+/*******************************************************/
+
+std::string MailUser_and_pass;
+
+void SetMailUserPass(char *s)
+{
+	MailUser_and_pass = s;
 }
 int CheckMail(void)
 {
+
+	if (MailUser_and_pass.empty()) return -1;
+
 	int mail = 0;
-	mail = OpenMailServer(MailUser, MailPass);
+	if (strstr(MailUser_and_pass.c_str(), "@gmail") != NULL)
+	{
+		mail = check_gmail((char*)MailUser_and_pass.c_str());
+	}
+	else
+	{
+		mail = 0;// OpenMailServer(MailUser_and_pass);
+	}
 
 	return mail;
 }
 
+/******************************************************/
+
+std::string GitHub_Account;
+void SetGitHubUserPass(char *s)
+{
+	GitHub_Account = s;
+}
+int CheckGitHubNotification(void)
+{
+	if (GitHub_Account.empty()) return -1;
+
+	return check_github((char *)GitHub_Account.c_str());
+}
+/******************************************************/
+int RSS_Mem_lengh = 0;
+std::string RSS_site;
+
+void SetRSS_Site(char *s)
+{
+	RSS_site = s;
+	RSSMonitor();
+}
+
+int RSSMonitor()
+{
+	int l;
+	char *tmp;
+
+	if (RSS_site.empty()) return -1;
+
+	tmp = LectureWeb((char *)RSS_site.c_str());
+	l = strlen(tmp);
+	free(tmp);
+
+	if (RSS_Mem_lengh == 0)
+	{
+		Mywprintf(L"Memorisation du RSS du site : %s\n", (char *)RSS_site.c_str());
+		RSS_Mem_lengh = l;
+	}
+	else if (RSS_Mem_lengh != l)
+	{
+		return 1;
+	}
+
+	return 0;
+}
 
 /******************************************************/
 //http://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix

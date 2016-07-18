@@ -33,6 +33,7 @@
 					<Add option="-O3" />
 					<Add option="-std=c++0x" />
 					<Add option="-Wall" />
+					<Add option="-Wno-write-strings" />
 					<Add directory="libs" />
 					<Add directory="libs/portaudio" />
 				</Compiler>
@@ -63,14 +64,9 @@
 		<Unit filename="flac.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="fonction.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="fonction.cpp" />
 		<Unit filename="hardware.cpp" />
 		<Unit filename="libs/i2cbusses.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="libs/jsmn.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/pugixml.cpp" />
@@ -82,9 +78,7 @@
 		</Unit>
 		<Unit filename="prog.cpp" />
 		<Unit filename="traitement.cpp" />
-		<Unit filename="translategoogle.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="translategoogle.cpp" />
 		<Unit filename="uart.c">
 			<Option compilerVar="CC" />
 		</Unit>

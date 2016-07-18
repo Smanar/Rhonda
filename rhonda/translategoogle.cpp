@@ -169,8 +169,6 @@ int TranslateGoggle(char *filename,char *resultat)
 		res = curl_easy_perform(curl);
 
 		wprintf(L"Resultat From Google\n %s \n",data.memory);
-		
-		SP();
 
 
 		{

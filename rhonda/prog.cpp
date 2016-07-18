@@ -170,7 +170,10 @@ int main(int argc, char* argv[]) {
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
 
-	cTraitement.traite("donne-moi l'heure");
+	cTraitement.traite("test requete domoticz");
+
+	//CheckGitHubNotification();
+
 	//TranslateGoggle("c://", Resultat);
 
 	bExit = true;
@@ -222,7 +225,6 @@ int main(int argc, char* argv[]) {
 
 					ClearMusic();
 
-
 					PlayWave("resources/ding.wav");
 
 					if (HotWordModel == 1)
@@ -233,7 +235,7 @@ int main(int argc, char* argv[]) {
 					{
 
 						cMatrixLed.DisplayIcone(SMILEY);
-						//Now on attend le second hotword
+						//Now we wait for the second hotword
 						while (vide > 0)
 						{
 							pa_wrapper.Read(&data);
@@ -355,7 +357,9 @@ bool LoadConfig(void)
 	//config
 	SetGoogleApiKey((char *)panels.child("config").child_value("api"));
 	SetCity((char *)panels.child("config").child_value("ville"));
-	SetMailUserPass((char *)(panels.child("config").child_value("mailuser")), (char *)(panels.child("config").child_value("mailpass")));
+	SetMailUserPass((char *)(panels.child("config").child_value("mailuser_and_pass")));
+	SetGitHubUserPass((char *)(panels.child("config").child_value("githubaccount")));
+	SetRSS_Site((char *)(panels.child("config").child_value("RSS_Site")));
 
 	//sound engine
 	sensitivity_str = std::string(panels.child("sound_engine").child_value("sensibility"));

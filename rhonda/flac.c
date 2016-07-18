@@ -33,6 +33,7 @@
 #include <string.h>
 
 #include "flac.h"
+#include <wchar.h>
 
 //#include "FLAC/metadata.h"
 #include "FLAC/stream_encoder.h"
@@ -44,6 +45,8 @@ static void progress_callback(const FLAC__StreamEncoder *encoder, FLAC__uint64 b
 static unsigned total_samples = 0; /* can use a 32-bit number due to WAVE size limitations */
 static FLAC__byte buffer[READSIZE/*samples*/ * 2/*bytes_per_sample*/ * 1/*channels*/]; /* we read the WAVE data into here */
 static FLAC__int32 pcm[READSIZE/*samples*/ * 1/*channels*/];
+
+#if 0
 
 int ConvertFlac(char * sour, char * dest)
 {
@@ -144,7 +147,7 @@ int ConvertFlac(char * sour, char * dest)
 
 	return 1;
 }
-
+#endif
 
 int ConvertFlacBuffer(char * sour, long size, const char * dest)
 {
@@ -171,7 +174,7 @@ int ConvertFlacBuffer(char * sour, long size, const char * dest)
 	*/
 	if (size < 44)
 	{
-		fprintf(stderr, "ERROR: Buffer problem\n");
+		wprintf(L"ERROR: Buffer problem\n");
 	}
 	memcpy(buffer,sour,44);
 	size -= 44;
@@ -184,7 +187,7 @@ int ConvertFlacBuffer(char * sour, long size, const char * dest)
 	total_samples = (((((((unsigned)buffer[43] << 8) | buffer[42]) << 8) | buffer[41]) << 8) | buffer[40]) / 2;// par 2 au lieu de 4
 	/* allocate the encoder */
 	if((encoder = FLAC__stream_encoder_new()) == NULL) {
-		fprintf(stderr, "ERROR: allocating encoder\n");
+		wprintf(L"ERROR: allocating encoder\n");
 		return 0;
 	}
 
@@ -202,7 +205,7 @@ int ConvertFlacBuffer(char * sour, long size, const char * dest)
 	if(ok) {
 		init_status = FLAC__stream_encoder_init_file(encoder, dest, progress_callback, /*client_data=*/NULL);
 		if(init_status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-			fprintf(stderr, "ERROR: initializing encoder: %s\n", FLAC__StreamEncoderInitStatusString[init_status]);
+			wprintf(L"ERROR: initializing encoder: %s\n", FLAC__StreamEncoderInitStatusString[init_status]);
 			ok = false;
 		}
 	}
@@ -214,7 +217,7 @@ int ConvertFlacBuffer(char * sour, long size, const char * dest)
 			size_t need = (left>READSIZE? (size_t)READSIZE : (size_t)left);
 			//if(fread(buffer, channels*(bps/8), need, fin) != need) {
 			if (size < (long)(channels*(bps/8) * need )) {
-				fprintf(stderr, "ERROR: reading from buffer\n");
+				wprintf(L"ERROR: reading from buffer\n");
 				ok = false;
 			}
 			else {
@@ -238,8 +241,8 @@ int ConvertFlacBuffer(char * sour, long size, const char * dest)
 
 	ok &= FLAC__stream_encoder_finish(encoder);
 
-	fprintf(stderr, "encoding: %s\n", ok? "succeeded" : "FAILED");
-	fprintf(stderr, "state: %s\n", FLAC__StreamEncoderStateString[FLAC__stream_encoder_get_state(encoder)]);
+	wprintf(L"encoding: %s\n", ok? L"succeeded" : L"FAILED");
+	wprintf(L"state: %s\n", FLAC__StreamEncoderStateString[FLAC__stream_encoder_get_state(encoder)]);
 
 	FLAC__stream_encoder_delete(encoder);
 

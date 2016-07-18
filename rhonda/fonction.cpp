@@ -8,6 +8,7 @@
 
 #include <curl/curl.h>
 #include <curl/easy.h>
+//#define USE_SSL
 
 
 //http://nicolasj.developpez.com/articles/regex/
@@ -27,14 +28,15 @@
 #endif
 
 
-
 /********************************************************/
+//    Curl Class
+
 
 //Structure recevant la sortie de LibCurl
 struct BufferStruct
 {
-  char* buffer;
-  size_t size;
+	char* buffer;
+	size_t size;
 };
 
 //Met le contenu de la page web dans la struct
@@ -44,11 +46,11 @@ static size_t WriteMemoryCallback(void* ptr, size_t size, size_t nmemb, void* da
 	struct BufferStruct* mem = (struct BufferStruct*) data;
 	mem->buffer = (char*)realloc(mem->buffer, mem->size + realsize + 1);
 
-	if ( mem->buffer )
+	if (mem->buffer)
 	{
-		memcpy(&(mem->buffer[mem->size]), ptr, realsize );
+		memcpy(&(mem->buffer[mem->size]), ptr, realsize);
 		mem->size += realsize;
-		mem->buffer[ mem->size ] = 0;
+		mem->buffer[mem->size] = 0;
 
 		return realsize;
 	}
@@ -57,82 +59,187 @@ static size_t WriteMemoryCallback(void* ptr, size_t size, size_t nmemb, void* da
 }
 
 
-//Lecture de la page web
-char* LectureWeb(char* URL)
-{
+class MyCurl {
+public:
+	MyCurl();
+	~MyCurl();
 
-  char *Chaine;
- 
-  CURL *myHandle;
-  CURLcode result;
-  struct BufferStruct LectureLC;
-  LectureLC.buffer = NULL;
-  LectureLC.size = 0;
+	char * GetHtml(char*, char *);
 
-  curl_global_init(CURL_GLOBAL_ALL);
- 
-  myHandle = curl_easy_init();
-  curl_easy_setopt(myHandle, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_easy_setopt(myHandle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-  curl_easy_setopt(myHandle, CURLOPT_WRITEDATA, (void*)&LectureLC);
-  curl_easy_setopt(myHandle, CURLOPT_URL, URL);
-  result = curl_easy_perform(myHandle);  //voir la doc pour une gestion minimal des erreurs
-  curl_easy_cleanup(myHandle);
- 
-  if(result!=0)
-  {
-	  /*Error */
-	  LectureLC.size=1;
-  }
+private:
 
-  Chaine = (char*)malloc((LectureLC.size + 1) * sizeof(char));
-
-  if(LectureLC.buffer)
-  {
-
-	strcpy(Chaine, LectureLC.buffer); 
-	strcat(Chaine,"\0");
-
-  }
-  else
-  {
-	  Chaine[0] = '\0';
-  }
-
-  free(LectureLC.buffer);
-  LectureLC.buffer = NULL;
-  
- 
-  return Chaine;
-}
-
-
-int check_gmail(char *username, char *password)
-{
+	struct BufferStruct chunk;
 
 	CURL *myHandle;
 	CURLcode result;
 
-	// sendRequest 
+};
+
+
+MyCurl::MyCurl()
+{
+	chunk.buffer = (char*)malloc(1);
+	chunk.size = 0;
+}
+
+char * MyCurl::GetHtml(char *url, char *user_and_pass)
+{
+
+	//inicializacion
+	curl_global_init(CURL_GLOBAL_ALL);
 	myHandle = curl_easy_init();
-	curl_easy_setopt(myHandle, CURLOPT_URL, "https://mail.google.com/mail/feed/atom");
-	curl_easy_setopt(myHandle, CURLOPT_FOLLOWLOCATION, 1);
-	//curl_easy_setopt(myHandle, CURLOPT_RETURNTRANSFER, 1);
+
+
+	curl_easy_setopt(myHandle, CURLOPT_URL, url);
+	curl_easy_setopt(myHandle, CURLOPT_NOPROGRESS, 1L);
+
+	if (user_and_pass)
+	{
+		curl_easy_setopt(myHandle, CURLOPT_USERPWD, user_and_pass);
+	}
+
+	//curl_easy_setopt(myHandle, CURLOPT_USERNAME, username);
+	//curl_easy_setopt(myHandle, CURLOPT_PASSWORD, password);
+	//curl_easy_setopt(myHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+	//curl_easy_setopt(myHandle, CURLOPT_ENCODING, "");
+
+	curl_easy_setopt(myHandle, CURLOPT_USERAGENT, "curl/7.42.0");
+	curl_easy_setopt(myHandle, CURLOPT_MAXREDIRS, 50L);
+	curl_easy_setopt(myHandle, CURLOPT_TCP_KEEPALIVE, 1L);
+
+#ifdef USE_SSL
+	//https://curl.haxx.se/libcurl/c/cacertinmem.html
+	curl_easy_setopt(myHandle, CURLOPT_CAINFO, "file");
+#else
 	curl_easy_setopt(myHandle, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_easy_setopt(myHandle, CURLOPT_SSL_VERIFYHOST, 0);
+#endif
 
-	//curl_setopt(myHandle, CURLOPT_USERPWD, username . ":".password);
-	curl_easy_setopt(myHandle, CURLOPT_USERNAME, username);
-	curl_easy_setopt(myHandle, CURLOPT_PASSWORD, password);
+	curl_easy_setopt(myHandle, CURLOPT_VERBOSE, 0); // debug infos
 
-	curl_easy_setopt(myHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-	curl_easy_setopt(myHandle, CURLOPT_ENCODING, "");
+	curl_easy_setopt(myHandle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+	curl_easy_setopt(myHandle, CURLOPT_WRITEDATA, (void *)&chunk);
+	//curl_easy_setopt(myHandle, CURLOPT_HEADERDATA, &header_string);
+
+
 	result = curl_easy_perform(myHandle);
-	curl_easy_cleanup(myHandle);
 
+	if (result != CURLE_OK)
+	{
+		Mywprintf(L"curl_easy_perform() failed: %s\n", curl_easy_strerror(result));
+		chunk.size = 0;
+		chunk.buffer[0] = '\0';
+	}
+	else
+	{
+		//printf("%s\n", chunk.buffer);
+		//printf("%lu bytes retrieved\n", (long)chunk.size);
+		chunk.buffer[chunk.size] = '\0';
+	}
+
+	/* always cleanup */
+	curl_easy_cleanup(myHandle);
 	curl_global_cleanup();
 
-	//returning retrieved feed
-	return 1;
+	return chunk.buffer;
+
+}
+
+MyCurl::~MyCurl()
+{
+	if (chunk.buffer)
+	{
+		free(chunk.buffer);
+		chunk.buffer = NULL;
+	}
+}
+
+
+/********************************************************/
+
+
+
+
+
+//Lecture de la page web
+char* LectureWeb(char* URL)
+{
+
+	char *Chaine;
+	char *Resultat;
+	int len;
+
+	MyCurl cMyCurl;
+
+	Resultat = cMyCurl.GetHtml(URL, NULL);
+
+	if (!Resultat) return NULL;
+
+	len = strlen(Resultat);
+
+	Chaine = (char*)malloc((len + 1) * sizeof(char));
+	strncpy(Chaine, Resultat,len);
+	Chaine[len] = '\0';
+
+	return Chaine;
+}
+
+
+int check_gmail(char *user_and_pass)
+{
+	char *Resultat;
+	int mail = 0;
+	struct slre_cap caps[1];
+
+	MyCurl cMyCurl;
+
+	//https://mail.google.com/mail/feed/atom/unread
+	//https://mail.google.com/mail/feed/atom/inbox/
+	//https://mail.google.com/mail/feed/atom
+	Resultat = cMyCurl.GetHtml("https://mail.google.com/mail/feed/atom", user_and_pass);
+
+	if (!Resultat) return false;
+
+	if (slre_match("<fullcount>([0-9]+)<.fullcount>", Resultat, strlen(Resultat), caps, 1, 0) > 0)
+	{
+		char *tmp;
+
+		tmp = (char *)malloc((caps[0].len + 1) * sizeof(char));
+		strncpy(tmp, caps[0].ptr, caps[0].len);
+		strncpy(tmp + caps[0].len, "\0", 1);
+		mail = atoi(tmp);
+		free(tmp);
+	}
+
+	return mail;
+}
+
+
+int check_github(char *user_and_pass)
+{
+	char *Resultat;
+	int notification = 0;
+	struct slre_cap caps[1];
+
+	MyCurl cMyCurl;
+	Resultat = cMyCurl.GetHtml("https://api.github.com/notifications", user_and_pass);
+
+	if (!Resultat) return false;
+
+	while (slre_match("\"name\": \"([^\"]+)\"", Resultat, strlen(Resultat), caps, 1, 0) > 0)
+	{
+		//char *tmp;
+		//tmp = (char *)malloc((caps[0].len + 1) * sizeof(char));
+		//strncpy(tmp, caps[0].ptr, caps[0].len);
+		//strncpy(tmp + caps[0].len, "\0", 1);
+		//notification = atoi(tmp);
+		//free(tmp);
+
+		notification += 1;
+		Resultat = (char *)(caps[0].ptr + caps[0].len);
+	}
+
+	return notification;
 }
 
 
@@ -146,8 +253,8 @@ int OpenMailServer(char *username,char *password)
 	CURL *myHandle;
 	CURLcode result;
 
-    chunk.buffer = (char*) malloc(1);  //crecerá según sea necesario con el realloc
-    chunk.size = 0;    //no hay datos en este punto
+	chunk.buffer = (char*)malloc(1);
+    chunk.size = 0;
 
     //inicializacion
     curl_global_init(CURL_GLOBAL_ALL);

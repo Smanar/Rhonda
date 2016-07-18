@@ -321,8 +321,48 @@ void cTraitement::ManageAction(char *c)
 			wchar_t Str[400];
 			int m = 0;
 			m = CheckMail();
-			swprintf(Str, 400, L"Vous avez %i mails", m);
-			parle(Str);
+			if (m == -1)
+			{
+				parle(L"probleme de configuration");
+			}
+			else
+			{
+				swprintf(Str, 400, L"Vous avez %i nouveaux m\u00e8ils", m);
+				parle(Str);
+			}
+		}
+		else if (strcmp("CHECKGITHUB", Key) == 0)
+		{
+			wchar_t Str[400];
+			int m = 0;
+			m = CheckGitHubNotification();
+			if (m == -1)
+			{
+				parle(L"probleme de configuration");
+			}
+			else
+			{
+				swprintf(Str, 400, L"Vous avez %i nouvelles notifications", m);
+				parle(Str);
+			}
+		}
+		else if (strcmp("CHECKRSS", Key) == 0)
+		{
+			int b = 0;
+			b = RSSMonitor();
+			if (b == -1)
+			{
+				parle(L"probleme de configuration");
+			}
+			else if (b == 1)
+			{
+				parle(L"Le site a chang\u00e9");
+			}
+			else
+			{
+				parle(L"Le site n'a re\u00e7u aucunes modifications");
+			}
+			
 		}
 		else if (strcmp("MUSIQUE", Key) == 0)
 		{
@@ -349,6 +389,10 @@ void cTraitement::ManageAction(char *c)
 			wcscat(Str, Liste_film);
 			parle(Str);
 			
+		}
+		else if (strcmp("SENDREQUEST", Key) == 0)
+		{
+			SendRequest(Param);
 		}
 		else if (strcmp("SHELLEXECUTE", Key) == 0)
 		{

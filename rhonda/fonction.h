@@ -10,13 +10,10 @@ typedef int BOOL;
 #define snprintf _snprintf
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 char* LectureWeb(char* URL);
 int OpenMailServer(char *username,char *password);
-int check_gmail(char *username, char *password);
+int check_gmail(char *);
+int check_github(char *);
 
 int GetWord(char * reg, char *str, char *res,int l);
 int Findhour(char *str);
@@ -36,7 +33,3 @@ const char * timestamp(void);
 
 void Wait(int sec);
 void SP(void);
-
-#ifdef __cplusplus
-}
-#endif

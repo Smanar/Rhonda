@@ -738,7 +738,7 @@ int cRecord::RecordFLAC(const char *fileName, uint32_t duration)
 		writeWAVHeaderBuffer(WavBuffer,hdr);
 		memcpy(WavBuffer+44,data.recordedSamples,NUM_CHANNELS * sizeof(SAMPLE) * data.frameIndex);
 
-		printf("Sound recorded, convertion\n");
+		printf("Sound recorded, convertion to flac\n");
 		ConvertFlacBuffer(WavBuffer,size, fileName);
 		if (WavBuffer) free(WavBuffer);
 	}

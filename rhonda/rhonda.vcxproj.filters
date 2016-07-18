@@ -21,12 +21,6 @@
     <ClCompile Include="flac.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="translategoogle.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fonction.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="prog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,6 +58,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="applications.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fonction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="translategoogle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

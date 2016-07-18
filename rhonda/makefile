@@ -40,9 +40,9 @@ OBJDIR_RELEASE = obj/Release
 DEP_RELEASE = 
 OUT_RELEASE = bin/Release/rhonda
 
-OBJ_DEBUG = $(OBJDIR_DEBUG)/applications.o $(OBJDIR_DEBUG)/audio.o $(OBJDIR_DEBUG)/flac.o $(OBJDIR_DEBUG)/fonction.o $(OBJDIR_DEBUG)/hardware.o $(OBJDIR_DEBUG)/libs/i2cbusses.o $(OBJDIR_DEBUG)/libs/jsmn.o $(OBJDIR_DEBUG)/libs/pugixml.o $(OBJDIR_DEBUG)/libs/rs232.o $(OBJDIR_DEBUG)/libs/slre.o $(OBJDIR_DEBUG)/prog.o $(OBJDIR_DEBUG)/traitement.o $(OBJDIR_DEBUG)/translategoogle.o $(OBJDIR_DEBUG)/uart.o
+OBJ_DEBUG = $(OBJDIR_DEBUG)/applications.o $(OBJDIR_DEBUG)/audio.o $(OBJDIR_DEBUG)/flac.o $(OBJDIR_DEBUG)/fonction.o $(OBJDIR_DEBUG)/hardware.o $(OBJDIR_DEBUG)/libs/i2cbusses.o $(OBJDIR_DEBUG)/libs/pugixml.o $(OBJDIR_DEBUG)/libs/rs232.o $(OBJDIR_DEBUG)/libs/slre.o $(OBJDIR_DEBUG)/prog.o $(OBJDIR_DEBUG)/traitement.o $(OBJDIR_DEBUG)/translategoogle.o $(OBJDIR_DEBUG)/uart.o
 
-OBJ_RELEASE = $(OBJDIR_RELEASE)/applications.o $(OBJDIR_RELEASE)/audio.o $(OBJDIR_RELEASE)/flac.o $(OBJDIR_RELEASE)/fonction.o $(OBJDIR_RELEASE)/hardware.o $(OBJDIR_RELEASE)/libs/i2cbusses.o $(OBJDIR_RELEASE)/libs/jsmn.o $(OBJDIR_RELEASE)/libs/pugixml.o $(OBJDIR_RELEASE)/libs/rs232.o $(OBJDIR_RELEASE)/libs/slre.o $(OBJDIR_RELEASE)/prog.o $(OBJDIR_RELEASE)/traitement.o $(OBJDIR_RELEASE)/translategoogle.o $(OBJDIR_RELEASE)/uart.o
+OBJ_RELEASE = $(OBJDIR_RELEASE)/applications.o $(OBJDIR_RELEASE)/audio.o $(OBJDIR_RELEASE)/flac.o $(OBJDIR_RELEASE)/fonction.o $(OBJDIR_RELEASE)/hardware.o $(OBJDIR_RELEASE)/libs/i2cbusses.o $(OBJDIR_RELEASE)/libs/pugixml.o $(OBJDIR_RELEASE)/libs/rs232.o $(OBJDIR_RELEASE)/libs/slre.o $(OBJDIR_RELEASE)/prog.o $(OBJDIR_RELEASE)/traitement.o $(OBJDIR_RELEASE)/translategoogle.o $(OBJDIR_RELEASE)/uart.o
 
 all: debug release
 
@@ -69,17 +69,14 @@ $(OBJDIR_DEBUG)/audio.o: audio.cpp
 $(OBJDIR_DEBUG)/flac.o: flac.c
 	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c flac.c -o $(OBJDIR_DEBUG)/flac.o
 
-$(OBJDIR_DEBUG)/fonction.o: fonction.c
-	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c fonction.c -o $(OBJDIR_DEBUG)/fonction.o
+$(OBJDIR_DEBUG)/fonction.o: fonction.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c fonction.cpp -o $(OBJDIR_DEBUG)/fonction.o
 
 $(OBJDIR_DEBUG)/hardware.o: hardware.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c hardware.cpp -o $(OBJDIR_DEBUG)/hardware.o
 
 $(OBJDIR_DEBUG)/libs/i2cbusses.o: libs/i2cbusses.c
 	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c libs/i2cbusses.c -o $(OBJDIR_DEBUG)/libs/i2cbusses.o
-
-$(OBJDIR_DEBUG)/libs/jsmn.o: libs/jsmn.c
-	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c libs/jsmn.c -o $(OBJDIR_DEBUG)/libs/jsmn.o
 
 $(OBJDIR_DEBUG)/libs/pugixml.o: libs/pugixml.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c libs/pugixml.cpp -o $(OBJDIR_DEBUG)/libs/pugixml.o
@@ -96,8 +93,8 @@ $(OBJDIR_DEBUG)/prog.o: prog.cpp
 $(OBJDIR_DEBUG)/traitement.o: traitement.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c traitement.cpp -o $(OBJDIR_DEBUG)/traitement.o
 
-$(OBJDIR_DEBUG)/translategoogle.o: translategoogle.c
-	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c translategoogle.c -o $(OBJDIR_DEBUG)/translategoogle.o
+$(OBJDIR_DEBUG)/translategoogle.o: translategoogle.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c translategoogle.cpp -o $(OBJDIR_DEBUG)/translategoogle.o
 
 $(OBJDIR_DEBUG)/uart.o: uart.c
 	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c uart.c -o $(OBJDIR_DEBUG)/uart.o
@@ -129,17 +126,14 @@ $(OBJDIR_RELEASE)/audio.o: audio.cpp
 $(OBJDIR_RELEASE)/flac.o: flac.c
 	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c flac.c -o $(OBJDIR_RELEASE)/flac.o
 
-$(OBJDIR_RELEASE)/fonction.o: fonction.c
-	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c fonction.c -o $(OBJDIR_RELEASE)/fonction.o
+$(OBJDIR_RELEASE)/fonction.o: fonction.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c fonction.cpp -o $(OBJDIR_RELEASE)/fonction.o
 
 $(OBJDIR_RELEASE)/hardware.o: hardware.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c hardware.cpp -o $(OBJDIR_RELEASE)/hardware.o
 
 $(OBJDIR_RELEASE)/libs/i2cbusses.o: libs/i2cbusses.c
 	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c libs/i2cbusses.c -o $(OBJDIR_RELEASE)/libs/i2cbusses.o
-
-$(OBJDIR_RELEASE)/libs/jsmn.o: libs/jsmn.c
-	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c libs/jsmn.c -o $(OBJDIR_RELEASE)/libs/jsmn.o
 
 $(OBJDIR_RELEASE)/libs/pugixml.o: libs/pugixml.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c libs/pugixml.cpp -o $(OBJDIR_RELEASE)/libs/pugixml.o
@@ -156,8 +150,8 @@ $(OBJDIR_RELEASE)/prog.o: prog.cpp
 $(OBJDIR_RELEASE)/traitement.o: traitement.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c traitement.cpp -o $(OBJDIR_RELEASE)/traitement.o
 
-$(OBJDIR_RELEASE)/translategoogle.o: translategoogle.c
-	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c translategoogle.c -o $(OBJDIR_RELEASE)/translategoogle.o
+$(OBJDIR_RELEASE)/translategoogle.o: translategoogle.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c translategoogle.cpp -o $(OBJDIR_RELEASE)/translategoogle.o
 
 $(OBJDIR_RELEASE)/uart.o: uart.c
 	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c uart.c -o $(OBJDIR_RELEASE)/uart.o
