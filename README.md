@@ -117,7 +117,7 @@ And then just run the application.
 
 **Remarques speciales**
 
-Note pour les utilisateurs francais, le hotword "snowboy" est assez dur a reproduire, du moins pour moi avec mon accent pourri.
+Note pour les utilisateurs francais, le hotword "snowboy" est assez dur a reproduire, du moins pour moi avec mon accent pourri. C'est un des gros probleme de la reconnaissance vocale anglophone.
 Donc allez plutot sur le site https://snowboy.kitt.ai/ fabriquez vous 2 hotwords, du style "Rhonda" et "tu m'ecoutes ?"
 Dans le xml mettez
 
@@ -125,7 +125,7 @@ Dans le xml mettez
         <model>resources/rhonda.pmdl,resources/tumecoutes.pmdl</model>
         <sensibility>0.5,0.5</sensibility>
 
-Ceci pour eviter les faux positifs, en fait au declenchement du premier mot, vous avec 5/6s seconde pour declencher le second, sinon il repart a zero.
+Ceci pour eviter les faux positifs, en fait au declenchement du premier mot, vous avec 5/6s secondes pour declencher le second, sinon il repart a zero.
 
 Plus d'information pour les francais ici https://github.com/Smanar/Rhonda/wiki
 
