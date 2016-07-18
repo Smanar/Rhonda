@@ -1,5 +1,5 @@
 # Rhonda (under construction)
-Rhondha is just another personal home automation assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest/fastest possible with the minimal access to the SD card as possible (Most of the actions are managed by the application entirely in memory or use temporary file storage in memory.) and ofc energy power (I m using it with a Raspberry B).   
+Rhondha is just another personal home automation assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest/fastest possible with the minimal access to the SD card as possible (Most of the actions are managed by the application entirely in memory or use temporary file storage in RAM) and ofc energy power (I m using it with a Raspberry B).   
 All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml .  
 Some actions are hard-coded to be faster and less stressful for SD card but you can use specials shells scripts for personals actions.   
 Some example of it can do internally.    
