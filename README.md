@@ -1,15 +1,16 @@
 # Rhonda (under construction)
-Rhondha is just another personal home automation assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest/fastest possible with the minimal access to the SD card as possible (and ofc energy power).   
+Rhondha is just another personal home automation assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest/fastest possible with the minimal access to the SD card as possible (Most of the actions are managed by the application entirely in memory or use temporary file storage in memory.) and ofc energy power (I m using it with a Raspberry B).   
 All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml .  
 Some actions are hard-coded to be faster and less stressful for SD card but you can use specials shells scripts for personals actions.   
-Some example of it can do.    
+Some example of it can do internally.    
 - Speech regnition.
 - Vocal synthesis.
 - Command some 433 Mhz devices (like chacon plug).
 - Use a 8*8 matrix to display some icons or a spectrogram with sound during recording.
-- Check meteo/mails/definition/cinema program
+- Check meteo/mails/word definition/cinema program/Github notifications, ...   
 - Launch radio streaming.
 - Memorise alert.   
+- Send request to another server, to use it in a domotic system.   
 
 The engine that process recognized words can manage synonymous, forbidden word, obligatory word, so you are not forced to say exactly the same sentence to trigger event. Take a look on the xml file to see how it works.
 
@@ -64,9 +65,9 @@ You can see somes pictures here https://github.com/Smanar/Rhonda/wiki
 ----------
 
 
-A this moment you have 2 solutions, take the pre-compiled version, or compile it yourself.
+A this moment you have 2 solutions, take the pre-compiled version (generaly out of date), or compile it yourself.
 
-- The precompiled version, just download the archive here https://github.com/Smanar/Rhonda/releases/download/v1.0.0/Rhonda_release.zip , and extract files.
+- The precompiled version, just download the archive here https://github.com/Smanar/Rhonda/releases/download/v1.1.0/Rhonda_ReleaseV110.zip , and extract files.
 - If you want to compile it you need first to install somes libraries, the codec FLAC, CURL and various audio libs.
 
 > sudo apt-get install flac  
@@ -108,7 +109,9 @@ And then just run the application.
 - Say "snowboy"
 - You will hear a "ding" and the matrix will display a microphone (Wait for the microphone before speaking)
 - Say "Rappelles moi dans une heure", the matrix will display a spectrogram with the sound, you can use it to solve problems.
+- The matrix display a horglass during processing.
 - The matrix will display a smiley if all is ok or a "?" if there was a problem.
+- Return at first step.
 
 ----------
 
