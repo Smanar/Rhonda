@@ -6,6 +6,8 @@
         <ville>paris</ville>
         <cinemaurl>http://www.commeaucinema.com/rsspage.php?feed=cine</cinemaurl>
         <RSS_Site>http://www.site.com/forum/index.php?type=rss;action=.xml</RSS_Site>
+        <!-- FR or EN -->
+        <language>FR</language>
         <!-- La syntaxe pour les infos suivante est user:mot_de_passe -->
         <mailuser_and_pass>user:pass</mailuser_and_pass>
         <githubaccount>user:pass</githubaccount>
@@ -20,7 +22,7 @@
         <Min_amplitude>2000</Min_amplitude>
     </sound_engine>
     <!-- syntaxe  = > Requit/possible/option/interdit -->
-    <!-- (ser) lettre possible dans le mot, inutile pr pluriels car deja geres -->
+    <!-- mot(ser) entre parentheses = lettre possible en fin de mot, inutile pr pluriels car deja geres -->
     <commandlist>
         <LC command="*ACTION_ON micro///" action = "1" />
         <LC command="heure/*INFORMATION *QUESTION//" action = "2" />
@@ -28,7 +30,7 @@
         <LC command="*INFORMATION combien///" action = "3" />
         <LC command="*QUESTION *ACTION_ON programme tele///" action = "4" />
         <LC command="*QUESTION tele///" action = "4" />
-        <LC command="meteo/*QUESTION *INFORMATION demain//" action = "5" />
+        <LC command="*METEO/*QUESTION *INFORMATION demain//" action = "5" />
         <LC command="definition/de mot//" action = "6" />
         <LC command="*QUESTION veut dire///" action = "6" />
         <LC command="*ALARME a/heure minute heures minutes//" action = "7" />
@@ -44,7 +46,8 @@
         <LC command="*QUESTION au cinema///" action = "16" />
         <LC command="affiche icone tete///" action = "17" />
         <LC command="*QUESTION de neuf///" action = "19" />
-        <LC command="test requete serveur///" action = "20" />
+        <LC command="question vie univers///" action = "21" />
+        
     </commandlist>
     <!-- dictionnaire special -->
     <special>
@@ -54,6 +57,7 @@
         <SPE command="*QUESTION" word="quoi qu que quelle quel combien" />
         <SPE command="*ALARME" word="rappelle previens reveille" />
         <SPE command="*INFO" word="info information" />
+        <SPE command="*METEO" word="meteo temps" />
     </special>
     <!-- action a faire -->
     <!-- Separer les actions par | -->
@@ -76,8 +80,9 @@
         <ACT index="16" action="CINEMA" />
         <ACT index="17" action="SHOWICON 3" />
         <ACT index="18" action="MUSIQUE OFF" />
-        <ACT index="19" action="CHECKMAIL | CHECKGITHUB | CHECKRSS" />
+        <ACT index="19" action="SHOWICON 8 | CHECKMAIL 1| CHECKGITHUB 1| CHECKRSS 1" />
         <ACT index="20" action="SENDREQUEST http://xx.xx.xx.xx:8080/json.htm?type=command&amp;param=switchlight&amp;idx=220&amp;switchcmd=On" />
+        <ACT index="21" action="DIRE la réponse est 42" />
     </action>
     <!-- icones pour la matrice -->
     <!-- 1=sablier 2=micro 3=smiley 4=interrogation 5/6=anim alien 7=coeur 8=clock 9=mail-->
@@ -97,7 +102,12 @@
     <!-- Format YY/MM/DD/HH/MM  -->
     <Event>
         <Al time="XX/XX/XX/07/00" action="DIRE bone journee" />
-        <Al time="XX/XX/XX/XX/00" action="SHOWICON 8 | CHECKGITHUB | CHECKRSS" />
+        <Al time="XX/XX/XX/XX/00" action="SHOWICON 8 | CHECKGITHUB 0 | CHECKRSS 0" />
     </Event>
+    <!-- preprogrammed strings -->
+    <commonstring>
+        <STR id="0" string = "oui ?" />
+        <STR id="1" string = "je n'ai pas compris" />
+    </commonstring>
 </mesh>
 <?include somedata?>

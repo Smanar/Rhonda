@@ -10,3 +10,7 @@ int PlayWave(char * file);
 int ManageEvent(char* c);
 void SetMusic(bool b);
 void Exit(void);
+void SetLanguage(char *s);
+int GetLanguage(void);
+void SetCommonString(int index, char *s);
+wchar_t * GetCommonString(int index);

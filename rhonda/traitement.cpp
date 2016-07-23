@@ -200,7 +200,7 @@ void cTraitement::ManageAction(char *c)
 	TokenCommand = (char *)malloc((strlen(c) + 1) * sizeof(char));
 	strcpy(TokenCommand, c);
 
-	Mywprintf(L"Action a faire : %s\n", c);
+	Mywprintf(L"Action to do : %s\n", c);
 
 	for (Com = strtok(TokenCommand, "|"); Com; Com = strtok(NULL, "|"))
 	{
@@ -321,40 +321,52 @@ void cTraitement::ManageAction(char *c)
 			wchar_t Str[400];
 			int m = 0;
 			m = CheckMail();
+
 			if (m == -1)
 			{
 				parle(L"probleme de configuration");
+				break;
 			}
-			else
-			{
-				swprintf(Str, 400, L"Vous avez %i nouveaux m\u00e8ils", m);
-				parle(Str);
-			}
+			//if nothing and silence needed, say nothing
+			if ((strstr(Param, "0") != NULL) && (m == 0)) break;
+			
+			swprintf(Str, 400, L"Vous avez %i nouveaux m\u00e8ils", m);
+			parle(Str);
+			
 		}
 		else if (strcmp("CHECKGITHUB", Key) == 0)
 		{
 			wchar_t Str[400];
 			int m = 0;
 			m = CheckGitHubNotification();
+
 			if (m == -1)
 			{
 				parle(L"probleme de configuration");
+				break;
 			}
-			else
-			{
-				swprintf(Str, 400, L"Vous avez %i nouvelles notifications", m);
-				parle(Str);
-			}
+			//if nothing and silence needed, say nothing
+			if ((strstr(Param, "0") != NULL) && (m == 0)) break;
+
+
+			swprintf(Str, 400, L"Vous avez %i nouvelles notifications", m);
+			parle(Str);
+
 		}
 		else if (strcmp("CHECKRSS", Key) == 0)
 		{
-			int b = 0;
-			b = RSSMonitor();
-			if (b == -1)
+			int m = 0;
+			m = RSSMonitor();
+			if (m == -1)
 			{
 				parle(L"probleme de configuration");
+				break;
 			}
-			else if (b == 1)
+
+			//if nothing and silence needed, say nothing
+			if ((strstr(Param, "0") != NULL) && (m == 0)) break;
+
+			else if (m == 1)
 			{
 				parle(L"Le site a chang\u00e9");
 			}
@@ -435,7 +447,7 @@ void cTraitement::ManageAction(char *c)
 		}
 		else
 		{
-			parle(L"Je n'ai pas compris");
+			parle(GetCommonString(1)); // = "je n'ai pas compris" ?
 		}
 
 	}
@@ -449,7 +461,7 @@ void cTraitement::action(int choix)
 	if (ListActions[choix])
 		ManageAction(ListActions[choix]);
 	else
-		parle(L"Je n'ai pas compris");
+		parle(GetCommonString(1)); // = "je n'ai pas compris" ?
 }
 
 int cTraitement::traite(char *commande2)
@@ -470,7 +482,7 @@ int cTraitement::traite(char *commande2)
 	CleanCommand(commande);
 
 	SP();
-	Mywprintf(L"\033[0;31mPhrase reconnue : %s\033[0;37m\n", commande);
+	Mywprintf(L"\033[0;31mString recognized : %s\033[0;37m\n", commande);
 	SP();
 
 	for (i = 0; i < NbreCommand; i++)
@@ -530,7 +542,7 @@ int cTraitement::traite(char *commande2)
 
 		if (mottotal > Betterscore)
 		{
-			Mywprintf(L"\033[0;31mCorrespondance trouvee pr la chaine : %s\033[0;37m\n", ptr);
+			Mywprintf(L"\033[0;31mCorrespondence found for chain : %s\033[0;37m\n", ptr);
 			Betterscore = mottotal;
 			choix = ActionComL[i];
 		}
@@ -540,7 +552,7 @@ int cTraitement::traite(char *commande2)
 	if (choix == 0)
 	{
 		_DisplayIcone(INTERROGATION);
-		parle(L"Je n'ai pas compris");
+		parle(GetCommonString(1)); // = "je n'ai pas compris" ?
 	}
 	else
 	{

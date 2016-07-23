@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#include <string>
 
 #include <curl/curl.h> 
 //#include <direct.h>
@@ -13,6 +14,7 @@
 
 #include "libs/slre.h"
 #include "fonction.h"
+#include "prog.h"
 
 
 char GoogleApiKey[40];
@@ -119,9 +121,13 @@ int TranslateGoggle(char *filename,char *resultat)
 
 		char sizeHeader[255];
 
-		char apiurl[255];
-		strcpy(apiurl, "https://www.google.com/speech-api/v2/recognize?output=json&lang=FR-fr&key=");
-		strcat(apiurl, GoogleApiKey);
+		std::string apiurl;
+		apiurl = "https://www.google.com/speech-api/v2/recognize?output=json&lang=";
+
+		if (GetLanguage() == 0) apiurl = apiurl + "FR-fr";
+		else apiurl = apiurl + "EN-en";
+
+		apiurl = apiurl + "&key=" + GoogleApiKey;
 
 		file = fopen(filename, "r");
 		fseek(file, 0, SEEK_END);
@@ -164,7 +170,7 @@ int TranslateGoggle(char *filename,char *resultat)
 		//curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
-		curl_easy_setopt(curl, CURLOPT_URL, apiurl);
+		curl_easy_setopt(curl, CURLOPT_URL, apiurl.c_str());
 
 		res = curl_easy_perform(curl);
 

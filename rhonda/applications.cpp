@@ -565,11 +565,12 @@ int parle(const wchar_t *texte)
 
 	//char commande[400];
 	SP();
-	wprintf(L"\033[1;33mPhrase a dire %ls\033[0;37m\n", texte);
+	wprintf(L"\033[1;33mString to say : %ls\033[0;37m\n", texte);
 	SP();
 
 #ifndef _WIN32
-	char commande[511];
+	std::string commande;
+
 	int l = wcslen(texte) + 2;
 	//if the strng is too long, we cut it
 	if (l > 400)
@@ -579,10 +580,21 @@ int parle(const wchar_t *texte)
 	char *char_text = (char *)malloc(l*sizeof(char));
 	wcstombs(char_text, texte, l);
 
-	snprintf(commande, 510, "pico2wave -l=fr-FR -w=/dev/shm/test.wav \"<pitch level='100'><speed level='80'>%s</speed></pitch>\"", char_text);
-	//wprintf(L"Commande : %s\n",commande);
+	commande = "pico2wave -l=";
 
-	system(commande);
+	if (GetLanguage() == 0) commande = commande + "fr-FR";
+	else commande = commande + "en-EN";
+
+	commande = commande + " -w=/dev/shm/test.wav \"<pitch level='100'><speed level='80'>" + char_text + "</speed></pitch>\"";
+
+	free(char_text);
+
+	//Daemon mode
+	//commande = commande + " >/dev/null 2>&1 &";
+
+	//Mywprintf(L"Commande : %s\n",commande.c_str());
+
+	system(commande.c_str());
 	//system("aplay /dev/shm/test.wav");
 	PlayWave("/dev/shm/test.wav");
 #endif

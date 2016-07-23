@@ -498,14 +498,14 @@ char* mystrstr(char *s, char *subs) {
 		{
 			if(*b == '\0')
 			{
-				// ok le mot y est mais le char suivant est il un espace,une fin de chaine ou un pluriel ? */
-				if ((*a == ' ') || (*a == '\0') || (*a == 's') )
+				// ok le mot y est mais le char suivant est il un espace ou une fin de chaine? */
+				if ((*a == ' ') || (*a == '\0') )
 				{
 					return s;
 				}
 #if 1
 				//Est ce que tout les caracteres suivant sont dans la partie entre parenthses ?
-				while (charisinstring(c, *a)) a++;
+				while ( charisinstring(c, *a) || (*a == 's')) a++;
 
 				//Deuxieme test
 				if ((*a == ' ') || (*a == '\0') || (*a == 's'))

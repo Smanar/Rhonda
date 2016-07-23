@@ -10,7 +10,7 @@ No comment yet
 #endif
 
 /* Special options*/
-//#define DEBUG
+#define DEBUG
 #define SNOWBOY
 
 
@@ -57,8 +57,12 @@ float audio_gain = 1;
 int HotWordModel = 1;
 
 /***********************************************************************/
-
+//  Global variables
 bool bExit = false;
+int language = 0; // 0 = FR 1 = EN
+/***********************************************************************/
+
+
 
 //Initailisation classes
 class cTraitement cTraitement;
@@ -169,8 +173,7 @@ int main(int argc, char* argv[]) {
 	//TranslateGoggle("vvv", Resultat);
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
-
-	cTraitement.traite("test requete domoticz");
+	cTraitement.traite("quelle est la reponse au question sur la vie l univers");
 
 	//CheckGitHubNotification();
 
@@ -281,7 +284,7 @@ int main(int argc, char* argv[]) {
 
 		pa_wrapper.Stop();
 
-		parle(L"Oui ?");
+		parle(GetCommonString(0)); // = oui ?
 		//Wait(800);
 
 		wprintf(L"Recording\n");
@@ -310,7 +313,7 @@ int main(int argc, char* argv[]) {
 			else
 			{
 				cMatrixLed.DisplayIcone(INTERROGATION);
-				parle(L"Je n'ai pas compris");
+				parle(GetCommonString(1)); // = "je n'ai pas compris" ?
 			}
 		}
 
@@ -357,6 +360,7 @@ bool LoadConfig(void)
 	//config
 	SetGoogleApiKey((char *)panels.child("config").child_value("api"));
 	SetCity((char *)panels.child("config").child_value("ville"));
+	SetLanguage((char *)panels.child("config").child_value("language"));
 	SetMailUserPass((char *)(panels.child("config").child_value("mailuser_and_pass")));
 	SetGitHubUserPass((char *)(panels.child("config").child_value("githubaccount")));
 	SetRSS_Site((char *)(panels.child("config").child_value("RSS_Site")));
@@ -409,6 +413,12 @@ bool LoadConfig(void)
 		SetAlarm((char *)panel.attribute("time").value(), (char *)panel.attribute("action").as_string());
 	}
 
+	//Common string
+	for (pugi::xml_node panel = panels.child("commonstring").first_child(); panel; panel = panel.next_sibling())
+	{
+		SetCommonString(atoi(panel.attribute("id").value()), (char *)panel.attribute("string").as_string());
+	}
+
 	return true;
 }
 
@@ -442,6 +452,38 @@ void Exit(void)
 {
 	bExit = true;
 }
+
+int GetLanguage(void)
+{
+	return language;
+}
+void SetLanguage(char *s)
+{
+	if (strcmp("FR", s) == 0)  language = 0;
+	else if (strcmp("fr", s) == 0)  language = 0;
+	else language = 1;
+}
+
+#define MAXSTRING 2
+std::wstring CommonString[MAXSTRING];
+void SetCommonString(int index,char *s)
+{
+	const size_t cSize = strlen(s) + 1;
+	wchar_t* wc;
+
+	if ((index < 0) || (index > MAXSTRING)) return;
+
+	wc = new wchar_t[cSize];
+	mbstowcs(wc, s, cSize);
+	CommonString[index] = wc;
+	free(wc);
+}
+wchar_t * GetCommonString(int index)
+{
+	if ((index < 0) || (index > MAXSTRING)) return L"";
+	return (wchar_t*)CommonString[index].c_str();
+}
+
 /*******************************************/
 
 #if 0

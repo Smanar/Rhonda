@@ -241,8 +241,11 @@ int ConvertFlacBuffer(char * sour, long size, const char * dest)
 
 	ok &= FLAC__stream_encoder_finish(encoder);
 
-	wprintf(L"encoding: %s\n", ok? L"succeeded" : L"FAILED");
-	wprintf(L"state: %s\n", FLAC__StreamEncoderStateString[FLAC__stream_encoder_get_state(encoder)]);
+	if (!ok)
+	{
+		wprintf(L"encoding: %s\n", ok ? L"succeeded" : L"FAILED");
+		wprintf(L"state: %s\n", FLAC__StreamEncoderStateString[FLAC__stream_encoder_get_state(encoder)]);
+	}
 
 	FLAC__stream_encoder_delete(encoder);
 
