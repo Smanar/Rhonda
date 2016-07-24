@@ -2,7 +2,7 @@
 Rhondha is just another personal home automation assistant working with speech recognition (a Javis like). Developped for Raspberry, it was made to be the lightest/fastest possible with the minimal access to the SD card as possible (Most of the actions are managed by the application entirely in memory or use temporary file storage in RAM) and ofc energy power (I m using it with a Raspberry B).   
 All the configuration will be done with one xml file https://github.com/Smanar/Rhonda/blob/master/rhonda/config.xml .  
 Some actions are hard-coded to be faster and less stressful for SD card but you can use specials shells scripts for personals actions.   
-Some example of it can do internally.    
+Some example of it can do internally, you can find a list [here](https://github.com/Smanar/Rhonda/wiki/Fonctions-integr%C3%A9es.) .    
 - Speech regnition.
 - Vocal synthesis.
 - Command some 433 Mhz devices (like chacon plug).
@@ -14,7 +14,8 @@ Some example of it can do internally.
 
 The engine that process recognized words can manage synonymous, forbidden word, obligatory word, so you are not forced to say exactly the same sentence to trigger event. Take a look on the xml file to see how it works.
 
-So firstly, I know the code is ugly, but this project was written in shell then in C and finaly in C++, with lot of modifications (unicode, wide char, string), it must be entirely rewritten. And this application isn't multilanguage yet, lot of parts are hard-coded in french.
+So firstly, I know the code is ugly, but this project was written in shell then in C and finaly in C++, with lot of modifications (unicode, wide char, string), it must be entirely rewritten.   
+And this application isn't multilanguage yet, lot of parts are hard-coded in french. To change engine language or use/translate specials sentences edit the xml file.
 
 You can see somes pictures here https://github.com/Smanar/Rhonda/wiki
 
