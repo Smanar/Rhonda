@@ -36,8 +36,8 @@ You can see somes pictures here https://github.com/Smanar/Rhonda/wiki
 **You need:**
 
 - A raspberry, (I m using a B version) with a working microphone and audio. I have made my test with a dongle that make output and input in same time like this one https://www.adafruit.com/product/1475 I haven't tested it with Jack (I think portaudio need a special compilation with jack enabled).
-- A 8*8 matrix, 3 colors.
-- A 433Mhz transmitter.
+- A 8*8 matrix, 3 colors, (around 15/20 euros)
+- A 433Mhz transmitter, (less than 5 Euros)
 
 
 ----------
