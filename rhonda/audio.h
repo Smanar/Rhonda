@@ -130,7 +130,7 @@ public:
 	cRecord();
 
 	// Méthodes
-	int RecordFLAC(const char *fileName, uint32_t duration);
+	char * RecordFLAC(uint32_t duration, size_t *size);
 	void Stop(void);
 	bool Start(void);
 

@@ -4,12 +4,12 @@
 #include <time.h>
 #include <wchar.h>
 
+
 #include "traitement.h"
 #include "hardware.h"
 #include "fonction.h"
 #include "applications.h"
 #include "prog.h"
-
 
 //#define DEBUG_OUPUT
 
@@ -444,6 +444,32 @@ void cTraitement::ManageAction(char *c)
 		else if (strcmp("EXIT", Key) == 0)
 		{
 			Exit();
+		}
+		else if (strcmp("FINDFILE", Key) == 0)
+		{
+			char file[50];
+
+			file[49] = '\0';
+			/* fichier a recuperer */
+			if (GetWord(" ([a-zA-Z]+$)", commande, file, 49))
+			{
+				char file2[50];
+				file2[0] = '\0';
+				FindFile("/home/pi", file, file2);
+				if ((file2) && (strlen(file2) > 1))
+				{
+					LastResult = file2;
+					parle(L"J'ai trouv\u00e9 le fichier, j'en fais quoi ?");
+				}
+				else
+				{
+					parle(L"Je n'ai pas trouv\u00e9 le fichier");
+				}
+			}
+			else
+			{
+				parle(L"Je n'ai pas compris le fichier a chercher");
+			}
 		}
 		else
 		{

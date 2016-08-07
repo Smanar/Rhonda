@@ -10,7 +10,7 @@ No comment yet
 #endif
 
 /* Special options*/
-#define DEBUG
+//#define DEBUG
 #define SNOWBOY
 
 
@@ -73,9 +73,9 @@ class cRecord cRecord;
 
 #ifdef _WIN32
 #include <conio.h>
-char RamTmpFile[] = "testfile.flac";
+
 #else
-char RamTmpFile[] = "/dev/shm/testfile.flac";
+
 #endif
 
 
@@ -94,6 +94,9 @@ int main(int argc, char* argv[]) {
 	int Bitpersample = 16;
 
 	bool HotWord = false;
+
+	size_t size_flac;
+	char *buff_flac = NULL;
 
 	Resultat[0] = '\0';
 
@@ -173,7 +176,8 @@ int main(int argc, char* argv[]) {
 	//TranslateGoggle("vvv", Resultat);
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
-	cTraitement.traite("quelle est la reponse au question sur la vie l univers");
+
+	cTraitement.traite("recherche le fichier test");
 
 	//CheckGitHubNotification();
 
@@ -289,16 +293,21 @@ int main(int argc, char* argv[]) {
 
 		wprintf(L"Recording\n");
 
-		/*   /dev/shm is ram folder   */
-		err = cRecord.RecordFLAC(RamTmpFile, 5);
+		/*   Recording sound and convert it to flac file   */
+		buff_flac = cRecord.RecordFLAC(5,&size_flac);
 		//err = 0;
-		if (err != 0)
+		if (buff_flac != NULL)
 		{
+
 			SP();
 
 			wprintf(L"Send to google\n");
 			cMatrixLed.DisplayIcone(SABLIER);
-			err = TranslateGoggle(RamTmpFile, Resultat);
+
+			err = TranslateGoggle(buff_flac, size_flac, Resultat);
+
+			free(buff_flac);
+			buff_flac = NULL;
 
 			SP();
 			wprintf(L"Resultat with a score of (%d) : ", err);

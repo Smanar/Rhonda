@@ -302,6 +302,37 @@ int GetMeteo(wchar_t *s)
 }
 
 /*******************************************************************************/
+#ifdef _WIN32
+char * FindFile(char * path, char *f, char *ret)
+{
+	return NULL;
+}
+#else
+#include <dirent.h>
+
+char * FindFile(char * path, char *f, char *ret)
+{
+	DIR           *d;
+	struct dirent *dir;
+
+	d = opendir("path");
+	if (d)
+	{
+		while ((dir = readdir(d)) != NULL)
+		{
+			if (strstr(dir->d_name, f))
+			{
+				wprintf(L"%s\n", dir->d_name);
+			}
+		}
+
+		closedir(d);
+	}
+}
+
+#endif
+
+/*******************************************************************************/
 
 int GetDefinition(char *mot, wchar_t * def)
 {

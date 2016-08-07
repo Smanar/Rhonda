@@ -31,6 +31,7 @@ class cTraitement
     // Attributs
 	char commande[255];
 	int comptcommande;
+	std::string LastResult;
 
     int NbreCommand;
 	char **CommandeL;

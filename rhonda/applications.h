@@ -33,5 +33,7 @@ int RSSMonitor();
 
 int GetFilmCinema(wchar_t *s,int l);
 
+char * FindFile(char * path, char *f, char *ret);
+
 void Savedata(void);
 

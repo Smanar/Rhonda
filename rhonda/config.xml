@@ -47,7 +47,7 @@
         <LC command="affiche icone tete///" action = "17" />
         <LC command="*QUESTION de neuf///" action = "19" />
         <LC command="question vie univers///" action = "21" />
-        
+        <LC command="recherche le fichier///" action = "22" />
     </commandlist>
     <!-- dictionnaire special -->
     <special>
@@ -83,6 +83,7 @@
         <ACT index="19" action="SHOWICON 8 | CHECKMAIL 1| CHECKGITHUB 1| CHECKRSS 1" />
         <ACT index="20" action="SENDREQUEST http://xx.xx.xx.xx:8080/json.htm?type=command&amp;param=switchlight&amp;idx=220&amp;switchcmd=On" />
         <ACT index="21" action="DIRE la réponse est 42" />
+        <ACT index="22" action="FINDFILE" />
     </action>
     <!-- icones pour la matrice -->
     <!-- 1=sablier 2=micro 3=smiley 4=interrogation 5/6=anim alien 7=coeur 8=clock 9=mail-->

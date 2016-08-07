@@ -46,110 +46,150 @@ static unsigned total_samples = 0; /* can use a 32-bit number due to WAVE size l
 static FLAC__byte buffer[READSIZE/*samples*/ * 2/*bytes_per_sample*/ * 1/*channels*/]; /* we read the WAVE data into here */
 static FLAC__int32 pcm[READSIZE/*samples*/ * 1/*channels*/];
 
-#if 0
 
-int ConvertFlac(char * sour, char * dest)
+/******************************************************************/
+
+typedef struct sprec_encoder_state
 {
-	FLAC__bool ok = true;
-	FLAC__StreamEncoder *encoder = 0;
-	FLAC__StreamEncoderInitStatus init_status;
-	FILE *fin;
-	unsigned sample_rate = 0;
-	unsigned channels = 0;
-	unsigned bps = 0;
+	char *buf;
+	size_t length;
+} sprec_encoder_state;
 
-	if((fin = fopen(sour, "rb")) == NULL) {
-		fprintf(stderr, "ERROR: opening %s for input\n", sour);
-		return 0;
-	}
+static FLAC__StreamEncoderWriteStatus flac_write_callback(const FLAC__StreamEncoder *encoder, const FLAC__byte buffer[],	size_t bytes, unsigned samples, unsigned current_frame,	void *client_data )
+{
+	sprec_encoder_state *flac_data = client_data;
 
-	/* read wav header and validate it */
-	/*
-	if(
-	fread(buffer, 1, 44, fin) != 44 ||
-	memcmp(buffer, "RIFF", 4) ||
-	memcmp(buffer+8, "WAVEfmt \020\000\000\000\001\000\002\000", 16) ||
-	memcmp(buffer+32, "\004\000\020\000data", 8)
-	) {
-	fprintf(stderr, "ERROR: invalid/unsupported WAVE file, only 16bps stereo WAVE in canonical form allowed\n");
-	fclose(fin);
-	return 1;
-	}
-	*/
+	flac_data->buf = realloc(flac_data->buf, flac_data->length + bytes);
+	memcpy(flac_data->buf + flac_data->length, buffer, bytes);
+	flac_data->length += bytes;
 
-	if (fread(buffer, 1, 44, fin) != 44)
-	{
-		fprintf(stderr, "ERROR: opening %s for read\n", sour);
-		return 0;
-	}
-
-	sample_rate = ((((((unsigned)buffer[27] << 8) | buffer[26]) << 8) | buffer[25]) << 8) | buffer[24];
-	channels = 1;
-	bps = 16;
-
-	total_samples = (((((((unsigned)buffer[43] << 8) | buffer[42]) << 8) | buffer[41]) << 8) | buffer[40]) / 2;// par 2 au lieu de 4
-	/* allocate the encoder */
-	if((encoder = FLAC__stream_encoder_new()) == NULL) {
-		fprintf(stderr, "ERROR: allocating encoder\n");
-		fclose(fin);
-		return 0;
-	}
-
-	//fprintf(stderr, "Total samples %d \n",total_samples);
-
-	ok &= FLAC__stream_encoder_set_verify(encoder, true);
-	ok &= FLAC__stream_encoder_set_compression_level(encoder, 5);
-	ok &= FLAC__stream_encoder_set_channels(encoder, channels);
-	ok &= FLAC__stream_encoder_set_bits_per_sample(encoder, bps);
-	ok &= FLAC__stream_encoder_set_sample_rate(encoder, sample_rate);
-	ok &= FLAC__stream_encoder_set_total_samples_estimate(encoder, total_samples);
+	return FLAC__STREAM_ENCODER_WRITE_STATUS_OK;
+}
 
 
-	/* initialize encoder */
-	if(ok) {
-		init_status = FLAC__stream_encoder_init_file(encoder, dest, progress_callback, /*client_data=*/NULL);
-		if(init_status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
+
+char * ConvertWavBufferToFlacBuffer(char *buff_wave, size_t size_wave,size_t *size)
+{
+
+		FLAC__bool ok = true;
+		FLAC__StreamEncoder *encoder = 0;
+		FLAC__StreamEncoderInitStatus init_status;
+
+		unsigned sample_rate = 0;
+		unsigned channels = 0;
+		unsigned bps = 0;
+
+		sprec_encoder_state flac_data;
+		flac_data.buf = NULL;
+		flac_data.length = 0;
+
+
+		if (size_wave < 44)
+		{
+			wprintf(L"ERROR: Buffer problem\n");
+		}
+		memcpy(buffer, buff_wave, 44);
+		size_wave -= 44;
+		buff_wave += 44;
+
+		sample_rate = ((((((unsigned)buffer[27] << 8) | buffer[26]) << 8) | buffer[25]) << 8) | buffer[24];
+		channels = 1;
+		bps = 16;
+
+		total_samples = (((((((unsigned)buffer[43] << 8) | buffer[42]) << 8) | buffer[41]) << 8) | buffer[40]) / 2;// par 2 au lieu de 4
+		/* allocate the encoder */
+		if ((encoder = FLAC__stream_encoder_new()) == NULL) {
+			wprintf(L"ERROR: allocating encoder\n");
+			return 0;
+		}
+
+
+
+		//fprintf(stderr, "Total samples %d \n",total_samples);
+		ok &= FLAC__stream_encoder_set_verify(encoder, true);
+		ok &= FLAC__stream_encoder_set_compression_level(encoder, 5);
+		ok &= FLAC__stream_encoder_set_channels(encoder, channels);
+		ok &= FLAC__stream_encoder_set_bits_per_sample(encoder, bps);
+		ok &= FLAC__stream_encoder_set_sample_rate(encoder, sample_rate);
+		ok &= FLAC__stream_encoder_set_total_samples_estimate(encoder, total_samples);
+
+
+		ok = FLAC__stream_encoder_init_stream(
+			encoder,
+			flac_write_callback,
+			NULL, // seek() stream
+			NULL, // tell() stream
+			NULL, // metadata writer
+			&flac_data
+			);
+
+		if (ok != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
 			fprintf(stderr, "ERROR: initializing encoder: %s\n", FLAC__StreamEncoderInitStatusString[init_status]);
 			ok = false;
-		}
-	}
 
-	/* read blocks of samples from WAVE file and feed to encoder */
-	if(ok) {
-		size_t left = (size_t)total_samples;
-		while(ok && left) {
-			size_t need = (left>READSIZE? (size_t)READSIZE : (size_t)left);
-			if(fread(buffer, channels*(bps/8), need, fin) != need) {
-				fprintf(stderr, "ERROR: reading from WAVE file\n");
-				ok = false;
-			}
-			else {
-				/* convert the packed little-endian 16-bit PCM samples from WAVE into an interleaved FLAC__int32 buffer for libFLAC */
-				size_t i;
-				for(i = 0; i < need*channels; i++) {
-					/* inefficient but simple and works on big- or little-endian machines */
-					pcm[i] = (FLAC__int32)(((FLAC__int16)(FLAC__int8)buffer[2*i+1] << 8) | (FLAC__int16)buffer[2*i]);
+			free(flac_data.buf);
+			FLAC__stream_encoder_delete(encoder);
+			return NULL;
+		}
+		ok = true;
+
+		/* read blocks of samples from WAVE file and feed to encoder */
+		if (ok) {
+			size_t left = (size_t)total_samples;
+			while (ok && left) {
+				size_t need = (left>READSIZE ? (size_t)READSIZE : (size_t)left);
+				if (size_wave < (unsigned long)(channels*(bps / 8) * need)) {
+					fprintf(stderr, "ERROR: reading from WAVE file\n");
+					ok = false;
 				}
-				/* feed samples to encoder */
-				ok = FLAC__stream_encoder_process_interleaved(encoder, pcm, need);
+				else {
+					/* convert the packed little-endian 16-bit PCM samples from WAVE into an interleaved FLAC__int32 buffer for libFLAC */
+					size_t i;
+
+					memcpy(buffer, buff_wave, channels*(bps / 8) * need);
+					size_wave -= channels*(bps / 8) * need;
+					buff_wave += channels*(bps / 8) * need;
+
+
+					for (i = 0; i < need*channels; i++) {
+						/* inefficient but simple and works on big- or little-endian machines */
+						pcm[i] = (FLAC__int32)(((FLAC__int16)(FLAC__int8)buffer[2 * i + 1] << 8) | (FLAC__int16)buffer[2 * i]);
+					}
+					/* feed samples to encoder */
+					ok = FLAC__stream_encoder_process_interleaved(encoder, pcm, need);
+				}
+				left -= need;
 			}
-			left -= need;
 		}
-	}
 
-	ok &= FLAC__stream_encoder_finish(encoder);
+		ok &= FLAC__stream_encoder_finish(encoder);
 
-	fprintf(stderr, "encoding: %s\n", ok? "succeeded" : "FAILED");
-	fprintf(stderr, "state: %s\n", FLAC__StreamEncoderStateString[FLAC__stream_encoder_get_state(encoder)]);
+		if (!ok)
+		{
+			wprintf(L"encoding: %s\n", ok ? L"succeeded" : L"FAILED");
+			wprintf(L"state: %s\n", FLAC__StreamEncoderStateString[FLAC__stream_encoder_get_state(encoder)]);
+		}
+		FLAC__stream_encoder_delete(encoder);
 
-	FLAC__stream_encoder_delete(encoder);
-	fclose(fin);
 
-	return 1;
-}
+#if 0
+		//To make file
+		{
+			FILE *fout;
+			fout = fopen("test2.flac", "wb");
+			fwrite(flac_data.buf, 1, flac_data.length, fout);
+			fclose(fout);
+		}
 #endif
 
-int ConvertFlacBuffer(char * sour, long size, const char * dest)
+
+		*size = flac_data.length;
+
+		return flac_data.buf;
+
+}
+
+int ConvertWaveToFlacBuffer(char * sour, long size, const char * dest)
 {
 	FLAC__bool ok = true;
 	FLAC__StreamEncoder *encoder = 0;
@@ -251,6 +291,94 @@ int ConvertFlacBuffer(char * sour, long size, const char * dest)
 
 	return 1;
 }
+
+#if 0
+int ConvertWaveFileToFlacFile(char * sour, char * dest)
+{
+	FLAC__bool ok = true;
+	FLAC__StreamEncoder *encoder = 0;
+	FLAC__StreamEncoderInitStatus init_status;
+	FILE *fin;
+	unsigned sample_rate = 0;
+	unsigned channels = 0;
+	unsigned bps = 0;
+	if ((fin = fopen(sour, "rb")) == NULL) {
+		fprintf(stderr, "ERROR: opening %s for input\n", sour);
+		return 0;
+	}
+	/* read wav header and validate it */
+	/*
+	if(
+	fread(buffer, 1, 44, fin) != 44 ||
+	memcmp(buffer, "RIFF", 4) ||
+	memcmp(buffer+8, "WAVEfmt \020\000\000\000\001\000\002\000", 16) ||
+	memcmp(buffer+32, "\004\000\020\000data", 8)
+	) {
+	fprintf(stderr, "ERROR: invalid/unsupported WAVE file, only 16bps stereo WAVE in canonical form allowed\n");
+	fclose(fin);
+	return 1;
+	}
+	*/
+	if (fread(buffer, 1, 44, fin) != 44)
+	{
+		fprintf(stderr, "ERROR: opening %s for read\n", sour);
+		return 0;
+	}
+	sample_rate = ((((((unsigned)buffer[27] << 8) | buffer[26]) << 8) | buffer[25]) << 8) | buffer[24];
+	channels = 1;
+	bps = 16;
+	total_samples = (((((((unsigned)buffer[43] << 8) | buffer[42]) << 8) | buffer[41]) << 8) | buffer[40]) / 2;// par 2 au lieu de 4
+	/* allocate the encoder */
+	if ((encoder = FLAC__stream_encoder_new()) == NULL) {
+		fprintf(stderr, "ERROR: allocating encoder\n");
+		fclose(fin);
+		return 0;
+	}
+	//fprintf(stderr, "Total samples %d \n",total_samples);
+	ok &= FLAC__stream_encoder_set_verify(encoder, true);
+	ok &= FLAC__stream_encoder_set_compression_level(encoder, 5);
+	ok &= FLAC__stream_encoder_set_channels(encoder, channels);
+	ok &= FLAC__stream_encoder_set_bits_per_sample(encoder, bps);
+	ok &= FLAC__stream_encoder_set_sample_rate(encoder, sample_rate);
+	ok &= FLAC__stream_encoder_set_total_samples_estimate(encoder, total_samples);
+	/* initialize encoder */
+	if (ok) {
+		init_status = FLAC__stream_encoder_init_file(encoder, dest, progress_callback, /*client_data=*/NULL);
+		if (init_status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
+			fprintf(stderr, "ERROR: initializing encoder: %s\n", FLAC__StreamEncoderInitStatusString[init_status]);
+			ok = false;
+		}
+	}
+	/* read blocks of samples from WAVE file and feed to encoder */
+	if (ok) {
+		size_t left = (size_t)total_samples;
+		while (ok && left) {
+			size_t need = (left>READSIZE ? (size_t)READSIZE : (size_t)left);
+			if (fread(buffer, channels*(bps / 8), need, fin) != need) {
+				fprintf(stderr, "ERROR: reading from WAVE file\n");
+				ok = false;
+			}
+			else {
+				/* convert the packed little-endian 16-bit PCM samples from WAVE into an interleaved FLAC__int32 buffer for libFLAC */
+				size_t i;
+				for (i = 0; i < need*channels; i++) {
+					/* inefficient but simple and works on big- or little-endian machines */
+					pcm[i] = (FLAC__int32)(((FLAC__int16)(FLAC__int8)buffer[2 * i + 1] << 8) | (FLAC__int16)buffer[2 * i]);
+				}
+				/* feed samples to encoder */
+				ok = FLAC__stream_encoder_process_interleaved(encoder, pcm, need);
+			}
+			left -= need;
+		}
+	}
+	ok &= FLAC__stream_encoder_finish(encoder);
+	fprintf(stderr, "encoding: %s\n", ok ? "succeeded" : "FAILED");
+	fprintf(stderr, "state: %s\n", FLAC__StreamEncoderStateString[FLAC__stream_encoder_get_state(encoder)]);
+	FLAC__stream_encoder_delete(encoder);
+	fclose(fin);
+	return 1;
+}
+#endif
 
 
 void progress_callback(const FLAC__StreamEncoder *encoder, FLAC__uint64 bytes_written, FLAC__uint64 samples_written, unsigned frames_written, unsigned total_frames_estimate, void *client_data)

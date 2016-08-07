@@ -2,6 +2,6 @@
 #include <stdlib.h>
 
 
-int TranslateGoggle(char *filename,char *resultat);
+int TranslateGoggle(char *buff, size_t s, char *resultat);
 void SetGoogleApiKey(char *s);
 

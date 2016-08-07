@@ -96,7 +96,7 @@ static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp)
 	return 0;                          /* no more data left to deliver */
 }
 
-int TranslateGoggle(char *filename,char *resultat)
+int TranslateGoggle(char *Buff_flac, size_t s, char *resultat)
 {
 	CURL *curl;			// curl handle
 	CURLcode res;
@@ -112,11 +112,8 @@ int TranslateGoggle(char *filename,char *resultat)
 	curl = curl_easy_init();
 	if (curl) 
 	{
-		FILE *file;
-		int fileSize = 0;
 		struct curl_slist *chunk = NULL;
 
-		char *audioData;
 		struct WriteThis pooh;
 
 		char sizeHeader[255];
@@ -129,27 +126,18 @@ int TranslateGoggle(char *filename,char *resultat)
 
 		apiurl = apiurl + "&key=" + GoogleApiKey;
 
-		file = fopen(filename, "r");
-		fseek(file, 0, SEEK_END);
-		fileSize = ftell(file);
-		fseek(file, 0, SEEK_SET);
+		if (s == 0) return 0;
 
-		if (fileSize == 0) return 0;
-
-		wprintf(L"File size %d\n",fileSize);
-		audioData = (char*)malloc(fileSize);
+		wprintf(L"File size %d Kb\n",s/1000);
 
 		//chunk = curl_slist_append(chunk, "Content-Type: audio/l16; rate=44100");
 		chunk = curl_slist_append(chunk, "Content-Type: audio/x-flac; rate=44100");
 
-		fread(audioData, fileSize, 1, file);
-		fclose(file);
+		pooh.readptr = Buff_flac;
+		pooh.sizeleft = s;
+		pooh.totalsize = s;
 
-		pooh.readptr = audioData;
-		pooh.sizeleft = fileSize;
-		pooh.totalsize = fileSize;
-
-		sprintf(sizeHeader,"Content-Length: %d",fileSize);
+		sprintf(sizeHeader,"Content-Length: %d",s);
 		chunk = curl_slist_append(chunk, sizeHeader);
 
 		//disalbe Expect: 100-continue
@@ -174,7 +162,7 @@ int TranslateGoggle(char *filename,char *resultat)
 
 		res = curl_easy_perform(curl);
 
-		wprintf(L"Resultat From Google\n %s \n",data.memory);
+		Mywprintf(L"Resultat From Google\n %s \n",data.memory);
 
 
 		{
@@ -186,20 +174,20 @@ int TranslateGoggle(char *filename,char *resultat)
 			if (slre_match("{\"transcript\":\"([^\"]+)\",\"confidence\":([0-9\.]+)}", data.memory, data.size, caps, 2, 0) > 0)
 			{
 				char *tmp2;
+				int l;
 
 				strncpy(resultat, caps[0].ptr, caps[0].len);
-				strncpy(resultat + caps[0].len, "\0", 1);
+				resultat[caps[0].len] = '\0';
 
-				tmp2 = (char *)malloc((caps[1].len + 1) * sizeof(char));
-				strncpy(tmp2, caps[1].ptr, caps[1].len);
-				strncpy(tmp2 + caps[1].len, "\0", 1);
-				if (caps[1].len > 4)
-				{
-					tmp2 += 2;
-					tmp2[2] = '\0';
-				}
+				l = caps[1].len;
+				if (l > 4) l = 4;
+				tmp2 = (char *)malloc((l + 1) * sizeof(char));
+				strncpy(tmp2, caps[1].ptr + 2, l - 2);
+				tmp2[l - 2] = '\0';
 
 				bestscore = 1 + (atoi(tmp2));
+
+				free(tmp2);
 				
 			}
 			else
