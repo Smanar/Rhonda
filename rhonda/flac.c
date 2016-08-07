@@ -1,3 +1,10 @@
+/*
+*
+*       This is a modified version (2016)
+*       ---------------------------------
+*
+*
+*/
 /* example_c_encode_file - Simple FLAC file encoder using libFLAC
 * Copyright (C) 2007,2008,2009  Josh Coalson
 *
