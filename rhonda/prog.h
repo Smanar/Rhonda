@@ -14,3 +14,4 @@ void SetLanguage(char *s);
 int GetLanguage(void);
 void SetCommonString(int index, char *s);
 wchar_t * GetCommonString(int index);
+void SetSTTMode(int v);

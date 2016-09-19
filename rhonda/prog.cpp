@@ -35,7 +35,7 @@ No comment yet
 #include "audio.h"
 #include "hardware.h"
 #include "flac.h"
-#include "translategoogle.h"
+#include "STTEngine.h"
 #include "traitement.h"
 #include "fonction.h"
 #include "applications.h"
@@ -60,6 +60,7 @@ int HotWordModel = 1;
 //  Global variables
 bool bExit = false;
 int language = 0; // 0 = FR 1 = EN
+int STTEngine = 0; // 0 = google  -  1 = Bing
 /***********************************************************************/
 
 
@@ -95,8 +96,8 @@ int main(int argc, char* argv[]) {
 
 	bool HotWord = false;
 
-	size_t size_flac;
-	char *buff_flac = NULL;
+	size_t size_soundbuffer;
+	char *buff_soundbuffer = NULL;
 
 	Resultat[0] = '\0';
 
@@ -177,12 +178,31 @@ int main(int argc, char* argv[]) {
 	//TestTransmitter(0,12325261,1,"on");
 	//parle(L"test m\u00e9t\u00e9o");
 
-	cTraitement.traite("recherche le fichier test");
+	//cTraitement.traite("recherche le fichier test");
 
 	//CheckGitHubNotification();
+#if 0
+	{
+		char *source = NULL;
+		FILE *fp;
+		long bufsize;
+		size_t newLen;
+		char res[255];
 
-	//TranslateGoggle("c://", Resultat);
+		fp = fopen("c:\\testfile.wav", "rb");
+		fseek(fp, 0L, SEEK_END);
+		bufsize = ftell(fp);
 
+		source = (char*)malloc(sizeof(char) * (bufsize + 1));
+
+		fseek(fp, 0L, SEEK_SET);
+		newLen = fread(source, sizeof(char), bufsize, fp);
+
+		fclose(fp);
+
+		TranslateBing(source, newLen, res);
+	}
+#endif
 	bExit = true;
 
 #endif
@@ -292,23 +312,64 @@ int main(int argc, char* argv[]) {
 		//Wait(800);
 
 		wprintf(L"Recording\n");
+		SP();
 
-		/*   Recording sound and convert it to flac file   */
-		buff_flac = cRecord.RecordFLAC(5,&size_flac);
-		//err = 0;
-		if (buff_flac != NULL)
+		err = 0;
+		size_soundbuffer = 0;
+		
+		//Google STT engine
+		if (STTEngine == 0)
 		{
+			size_t size_tmpbuffer = 0;
+			char *buff_tmp = NULL;
 
-			SP();
+			/*   Recording sound and convert it to flac file   */
+			buff_tmp = cRecord.RecordSound(5, &size_tmpbuffer);
 
-			wprintf(L"Send to google\n");
-			cMatrixLed.DisplayIcone(SABLIER);
+			if ((!buff_tmp) || (size_tmpbuffer == 0))
+			{
+				err = 0;
+				break;
+			}
 
-			err = TranslateGoggle(buff_flac, size_flac, Resultat);
+			//convert wav buffer to flac buffer
+			printf("Sound recorded, convertion to flac\n");
+			buff_soundbuffer = ConvertWavBufferToFlacBuffer(buff_tmp, size_tmpbuffer, &size_soundbuffer);
 
-			free(buff_flac);
-			buff_flac = NULL;
+			if (buff_tmp) free(buff_tmp);
 
+			if ((buff_soundbuffer) && (size_soundbuffer > 0))
+			{
+
+				wprintf(L"Send to google\n");
+				cMatrixLed.DisplayIcone(SABLIER);
+
+				err = TranslateGoggle(buff_soundbuffer, size_soundbuffer, Resultat);
+			}
+		}
+		//Bing STT engine
+		else if (STTEngine == 1)
+		{
+			/*   Recording sound  */
+			buff_soundbuffer = cRecord.RecordSound(5, &size_soundbuffer);
+
+			if ((buff_soundbuffer) && (size_soundbuffer > 0))
+			{
+				wprintf(L"Send to Bing\n");
+				cMatrixLed.DisplayIcone(SABLIER);
+
+				err = TranslateBing(buff_soundbuffer, size_soundbuffer, Resultat);
+			}
+		}
+
+		if (buff_soundbuffer != NULL)
+		{
+     		free(buff_soundbuffer);
+			buff_soundbuffer = NULL;
+		}
+
+		if (err > 0)
+		{
 			SP();
 			wprintf(L"Resultat with a score of (%d) : ", err);
 			Mywprintf(L"%s\n", Resultat);
@@ -367,7 +428,8 @@ bool LoadConfig(void)
 	pugi::xml_node panels = doc.child("mesh");
 
 	//config
-	SetGoogleApiKey((char *)panels.child("config").child_value("api"));
+	SetSTTApiKey((char *)panels.child("config").child_value("api"));
+	SetSTTMode(atoi((char *)panels.child("config").child_value("STTMode")));
 	SetCity((char *)panels.child("config").child_value("ville"));
 	SetLanguage((char *)panels.child("config").child_value("language"));
 	SetMailUserPass((char *)(panels.child("config").child_value("mailuser_and_pass")));
@@ -493,53 +555,19 @@ wchar_t * GetCommonString(int index)
 	return (wchar_t*)CommonString[index].c_str();
 }
 
-/*******************************************/
+void SetSTTMode(int v)
+{
+	STTEngine = v;
+	if (STTEngine > 1) STTEngine = 0;
 
-#if 0
-int main2(int argc, char* argv[]) {
-	/* For sound engine */
-	std::vector<int16_t> data;
-	int Samplerate = 44100;
-	int Numchannel = 1;
-	int Bitpersample = 16;
-
-	if (!LoadConfig()) return 0;
-
-	wprintf(L"Snowboy sensivity %s\n", sensitivity_str.c_str());
-	wprintf(L"Snowboy modele %s\n", model_filename.c_str());
-
-	if ((int)(model_filename.find(",")) > 0) HotWordModel = 2;
-
-	// Initializes Snowboy detector.A faire avant setlocale sinon bug !!
-	snowboy::SnowboyDetect detector(resource_filename, model_filename);
-	detector.SetSensitivity(sensitivity_str);
-	detector.SetAudioGain(audio_gain);
-
-	Samplerate = detector.SampleRate();
-	Numchannel = detector.NumChannels();
-	Bitpersample = detector.BitsPerSample();
-
-	wprintf(L"Samplerate %i Numchannel %i, Bitpersampple %i\n", Samplerate, Numchannel, Bitpersample);
-
-	PortAudioWrapper pa_wrapper(Samplerate, Numchannel, Bitpersample);
-	if (!(pa_wrapper.ready))
+	if (STTEngine == 0)
 	{
-		wprintf(L"Audio problem for snowboy\n");
+		wprintf(L"Use Google STT\n");
 	}
-
-	while (true)
+	else if (STTEngine == 1)
 	{
-		pa_wrapper.Read(&data);
-
-		if (data.size() != 0) {
-			int result = detector.RunDetection(data.data(), data.size());
-			wprintf(L"xxx %d\n", result);
-			if (result > 0) {
-				wprintf(L"Hotword detected %d\n", result);
-			}
-		}
+		wprintf(L"Use Bing STT\n");
+		cRecord.SetSampleRate(8820);
+		//cRecord.SetSampleRate(44100);
 	}
 }
-#endif
-
-/*************************************************************************************************/

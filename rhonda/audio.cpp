@@ -25,11 +25,9 @@
 #define FRAMES_PER_BUFFER (512)
 #define MAXSILENCE 900
 #define MINSILENCE 500
-#define MINFRAME 45000
+#define MINFRAME 1.1f
 
 #define MAGICNUMBER 8000
-
-#define BUFFER
 
 int fd = 0;
 
@@ -389,7 +387,7 @@ int Checkamplitude(long value)
 	{
 		if (Enr_etat == ENR_ATTENTE)
 		{
-			wprintf(L"Son detecte, Demmarage enregistrement. Valeur : %ld\n",value);
+			wprintf(L"Sound detected, Start recording. Value : %ld\n",value);
 			_DisplaySpectro(-1);
 
 			Enr_etat = ENR_ENCOURS;
@@ -405,7 +403,7 @@ int Checkamplitude(long value)
 		{
 			if (Enr_etat != ENR_FINI)
 			{
-				wprintf(L"Too much silence.\n");
+				wprintf(L"Too much silence, stop recording.\n");
 				if (Enr_etat == ENR_ENCOURS) Enr_etat = ENR_FINI;
 				else Enr_etat = ENR_RATE;
 			}
@@ -460,7 +458,7 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,	unsigned 
 
 	if (framesLeft < framesPerBuffer)
 	{
-		wprintf(L"Depassement duree max\n");
+		wprintf(L"Recorded sound too long, stop recording\n");
 		framesToCalc = framesLeft;
 		finished = paComplete;
 	}
@@ -546,6 +544,8 @@ cRecord::cRecord()
 	data.recordedSamples = NULL;
 	hdr = NULL;
 
+	Defaut_sample_rate = SAMPLE_RATE;
+
 	hdr = (WaveHeader *)malloc(sizeof(*hdr));
 
 	wprintf(L"\033[0;31mInitialise sound recorder\033[0;37m\n");
@@ -553,7 +553,7 @@ cRecord::cRecord()
 	InitPortAudio();
 
 	//making header
-	hdr = genericWAVHeader(hdr, SAMPLE_RATE, 8 * sizeof(SAMPLE), NUM_CHANNELS);
+	hdr = genericWAVHeader(hdr, Defaut_sample_rate, 8 * sizeof(SAMPLE), NUM_CHANNELS);
 	if (!hdr)
 	{
 		wprintf(L"Error allocating WAV header.\n");
@@ -615,9 +615,25 @@ void cRecord::Stop()
 	}
 }
 
+void cRecord::SetSampleRate(int v)
+{
+	Defaut_sample_rate = v;
+
+	//Remake header
+	if (hdr) free(hdr);
+	hdr = (WaveHeader *)malloc(sizeof(*hdr));
+	hdr = genericWAVHeader(hdr, Defaut_sample_rate, 8 * sizeof(SAMPLE), NUM_CHANNELS);
+	if (!hdr)
+	{
+		wprintf(L"Error allocating WAV header.\n");
+	}
+
+	wprintf(L"Setting Sample rate : %d\n", v);
+
+}
 
 
-char * cRecord::RecordFLAC(uint32_t duration,size_t *sizeflac)
+char * cRecord::RecordSound(uint32_t duration,size_t *sizeflac)
 {
 
 	PaError err = paNoError;
@@ -628,8 +644,6 @@ char * cRecord::RecordFLAC(uint32_t duration,size_t *sizeflac)
 	int i;
 
 	Initchecker();
-
-
 
 	//ok start to recording
 	data.maxFrameIndex = MaxFrames = duration * hdr->sample_rate; /* Record for a few seconds. */
@@ -662,7 +676,7 @@ char * cRecord::RecordFLAC(uint32_t duration,size_t *sizeflac)
 	Stop();
 
 	wprintf(L"Nbre de frames = %d\n",data.frameIndex);
-	if (data.frameIndex < MINFRAME)
+	if (data.frameIndex < (hdr->sample_rate* MINFRAME))
 	{
 		wprintf(L"Fichier trop petit, nbre frame = %d < %d\n",data.frameIndex,MINFRAME);
 		return NULL;
@@ -693,7 +707,8 @@ char * cRecord::RecordFLAC(uint32_t duration,size_t *sizeflac)
 	average /= (double)numSamples;
 #endif
 
-#ifdef RAW
+//Raw output
+#if 0
 	{
 		FILE  *fid;
 		fid = fopen("recorded.raw", "wb");
@@ -708,10 +723,13 @@ char * cRecord::RecordFLAC(uint32_t duration,size_t *sizeflac)
 			fclose( fid );
 			printf("Wrote data to 'recorded.raw'\n");
 		}
+		return NULL;
 	}
-#elif FILE
+#endif
+//File output
+#if 0
 	{
-		FILE* fid = fopen(fileName, "wb");
+		FILE* fid = fopen("output.wav", "wb");
 		if(!fid)
 		{
 			printf("Could not open file.");
@@ -724,12 +742,15 @@ char * cRecord::RecordFLAC(uint32_t duration,size_t *sizeflac)
 			fwrite(data.recordedSamples, NUM_CHANNELS * sizeof(SAMPLE), data.frameIndex, fid);
 			fclose(fid);
 		}
+
+		return NULL;
 	}
-#else
+#endif
+//Buffer output
+#if 1
 	{
 		char *WavBuffer;
 		int size;
-		char * buff_flac;
 
 		hdr->data_size = data.frameIndex * (NUM_CHANNELS * sizeof(SAMPLE));
 		size = hdr->data_size + 44;
@@ -739,14 +760,11 @@ char * cRecord::RecordFLAC(uint32_t duration,size_t *sizeflac)
 		writeWAVHeaderBuffer(WavBuffer,hdr);
 		memcpy(WavBuffer+44,data.recordedSamples,NUM_CHANNELS * sizeof(SAMPLE) * data.frameIndex);
 
-		//convert wav buffer to flac buffer
-		printf("Sound recorded, convertion to flac\n");
-		buff_flac = ConvertWavBufferToFlacBuffer(WavBuffer, NUM_CHANNELS * sizeof(SAMPLE) * data.frameIndex + 44, sizeflac);
+		//return size
+		*sizeflac = NUM_CHANNELS * sizeof(SAMPLE) * data.frameIndex + 44;
 
-		if (WavBuffer) free(WavBuffer);
-		WavBuffer =  NULL;
-
-		return buff_flac;
+		//Return buffer
+		return WavBuffer;
 	}
 #endif
 

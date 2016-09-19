@@ -131,7 +131,7 @@ char * ConvertWavBufferToFlacBuffer(char *buff_wave, size_t size_wave,size_t *si
 			);
 
 		if (ok != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-			fprintf(stderr, "ERROR: initializing encoder: %s\n", FLAC__StreamEncoderInitStatusString[init_status]);
+			fprintf(stderr, "ERROR: initializing encoder: %s\n", FLAC__StreamEncoderInitStatusString[ok]);
 			ok = false;
 
 			free(flac_data.buf);

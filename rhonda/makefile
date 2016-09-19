@@ -30,19 +30,19 @@ DEP_DEBUG =
 OUT_DEBUG = bin/Debug/rhonda
 
 INC_RELEASE = $(INC) -Ilibs -Ilibs/portaudio
-CFLAGS_RELEASE = $(CFLAGS) -O3 -std=c++0x -Wall
+CFLAGS_RELEASE = $(CFLAGS) -O3 -std=c++0x -Wall -Wno-write-strings
 RESINC_RELEASE = $(RESINC)
 RCFLAGS_RELEASE = $(RCFLAGS)
 LIBDIR_RELEASE = $(LIBDIR)
-LIB_RELEASE = $(LIB)libs/libsnowboy-detect.a -lcblas libs/portaudio/libportaudio.a -llapack_atlas -lasound -ljack -lpthread -lrt -lm -ldl -lFLAC -lcurl -lwiringPi
+LIB_RELEASE = $(LIB)libs/libsnowboy-detect.a -lcblas libs/portaudio/libportaudio.a -llapack_atlas -lasound -ljack -lpthread -lrt -lm -ldl -lFLAC -lcurl -lwiringPi -luuid
 LDFLAGS_RELEASE = $(LDFLAGS) -s
 OBJDIR_RELEASE = obj/Release
 DEP_RELEASE = 
 OUT_RELEASE = bin/Release/rhonda
 
-OBJ_DEBUG = $(OBJDIR_DEBUG)/applications.o $(OBJDIR_DEBUG)/audio.o $(OBJDIR_DEBUG)/flac.o $(OBJDIR_DEBUG)/fonction.o $(OBJDIR_DEBUG)/hardware.o $(OBJDIR_DEBUG)/libs/i2cbusses.o $(OBJDIR_DEBUG)/libs/pugixml.o $(OBJDIR_DEBUG)/libs/rs232.o $(OBJDIR_DEBUG)/libs/slre.o $(OBJDIR_DEBUG)/prog.o $(OBJDIR_DEBUG)/traitement.o $(OBJDIR_DEBUG)/translategoogle.o $(OBJDIR_DEBUG)/uart.o
+OBJ_DEBUG = $(OBJDIR_DEBUG)/STTEngine.o $(OBJDIR_DEBUG)/applications.o $(OBJDIR_DEBUG)/audio.o $(OBJDIR_DEBUG)/flac.o $(OBJDIR_DEBUG)/fonction.o $(OBJDIR_DEBUG)/hardware.o $(OBJDIR_DEBUG)/libs/i2cbusses.o $(OBJDIR_DEBUG)/libs/pugixml.o $(OBJDIR_DEBUG)/libs/rs232.o $(OBJDIR_DEBUG)/libs/slre.o $(OBJDIR_DEBUG)/prog.o $(OBJDIR_DEBUG)/traitement.o $(OBJDIR_DEBUG)/uart.o
 
-OBJ_RELEASE = $(OBJDIR_RELEASE)/applications.o $(OBJDIR_RELEASE)/audio.o $(OBJDIR_RELEASE)/flac.o $(OBJDIR_RELEASE)/fonction.o $(OBJDIR_RELEASE)/hardware.o $(OBJDIR_RELEASE)/libs/i2cbusses.o $(OBJDIR_RELEASE)/libs/pugixml.o $(OBJDIR_RELEASE)/libs/rs232.o $(OBJDIR_RELEASE)/libs/slre.o $(OBJDIR_RELEASE)/prog.o $(OBJDIR_RELEASE)/traitement.o $(OBJDIR_RELEASE)/translategoogle.o $(OBJDIR_RELEASE)/uart.o
+OBJ_RELEASE = $(OBJDIR_RELEASE)/STTEngine.o $(OBJDIR_RELEASE)/applications.o $(OBJDIR_RELEASE)/audio.o $(OBJDIR_RELEASE)/flac.o $(OBJDIR_RELEASE)/fonction.o $(OBJDIR_RELEASE)/hardware.o $(OBJDIR_RELEASE)/libs/i2cbusses.o $(OBJDIR_RELEASE)/libs/pugixml.o $(OBJDIR_RELEASE)/libs/rs232.o $(OBJDIR_RELEASE)/libs/slre.o $(OBJDIR_RELEASE)/prog.o $(OBJDIR_RELEASE)/traitement.o $(OBJDIR_RELEASE)/uart.o
 
 all: debug release
 
@@ -59,6 +59,9 @@ debug: before_debug out_debug after_debug
 
 out_debug: before_debug $(OBJ_DEBUG) $(DEP_DEBUG)
 	$(LD) $(LIBDIR_DEBUG) -o $(OUT_DEBUG) $(OBJ_DEBUG)  $(LDFLAGS_DEBUG) $(LIB_DEBUG)
+
+$(OBJDIR_DEBUG)/STTEngine.o: STTEngine.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c STTEngine.cpp -o $(OBJDIR_DEBUG)/STTEngine.o
 
 $(OBJDIR_DEBUG)/applications.o: applications.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c applications.cpp -o $(OBJDIR_DEBUG)/applications.o
@@ -93,9 +96,6 @@ $(OBJDIR_DEBUG)/prog.o: prog.cpp
 $(OBJDIR_DEBUG)/traitement.o: traitement.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c traitement.cpp -o $(OBJDIR_DEBUG)/traitement.o
 
-$(OBJDIR_DEBUG)/translategoogle.o: translategoogle.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c translategoogle.cpp -o $(OBJDIR_DEBUG)/translategoogle.o
-
 $(OBJDIR_DEBUG)/uart.o: uart.c
 	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c uart.c -o $(OBJDIR_DEBUG)/uart.o
 
@@ -116,6 +116,9 @@ release: before_release out_release after_release
 
 out_release: before_release $(OBJ_RELEASE) $(DEP_RELEASE)
 	$(LD) $(LIBDIR_RELEASE) -o $(OUT_RELEASE) $(OBJ_RELEASE)  $(LDFLAGS_RELEASE) $(LIB_RELEASE)
+
+$(OBJDIR_RELEASE)/STTEngine.o: STTEngine.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c STTEngine.cpp -o $(OBJDIR_RELEASE)/STTEngine.o
 
 $(OBJDIR_RELEASE)/applications.o: applications.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c applications.cpp -o $(OBJDIR_RELEASE)/applications.o
@@ -149,9 +152,6 @@ $(OBJDIR_RELEASE)/prog.o: prog.cpp
 
 $(OBJDIR_RELEASE)/traitement.o: traitement.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c traitement.cpp -o $(OBJDIR_RELEASE)/traitement.o
-
-$(OBJDIR_RELEASE)/translategoogle.o: translategoogle.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c translategoogle.cpp -o $(OBJDIR_RELEASE)/translategoogle.o
 
 $(OBJDIR_RELEASE)/uart.o: uart.c
 	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c uart.c -o $(OBJDIR_RELEASE)/uart.o

@@ -130,9 +130,10 @@ public:
 	cRecord();
 
 	// Méthodes
-	char * RecordFLAC(uint32_t duration, size_t *size);
+	char * RecordSound(uint32_t duration, size_t *size);
 	void Stop(void);
 	bool Start(void);
+	void SetSampleRate(int);
 
 	void SetSpectro(long);
 
@@ -145,6 +146,8 @@ private:
 	WaveHeader *hdr;
 	PAData data;
 	PaStream* stream;
+
+	int Defaut_sample_rate;
 
 	//config
 

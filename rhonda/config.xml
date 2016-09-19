@@ -2,7 +2,11 @@
 <mesh name="mesh_root">
 	<!-- configuration -->
     <config>
+        <!-- 0 = Google STT - 1 = Bing STT-->
+        <STTMode>0</STTMode>
+        <!-- API key -->
         <api>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</api>
+        <!-- Special config -->
         <ville>paris</ville>
         <cinemaurl>http://www.commeaucinema.com/rsspage.php?feed=cine</cinemaurl>
         <RSS_Site>http://www.site.com/forum/index.php?type=rss;action=.xml</RSS_Site>

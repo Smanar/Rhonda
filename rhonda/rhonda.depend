@@ -788,7 +788,7 @@
 	<stdlib.h>
 	<string.h>
 
-1468844157 source:/root/Desktop/Rhonda/applications.cpp
+1474288990 source:/root/Desktop/Rhonda/applications.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -801,20 +801,21 @@
 	"libs/slre.h"
 	"libs/pugixml.hpp"
 	<unistd.h>
+	<dirent.h>
 	<string>
 
-1468843098 /root/Desktop/Rhonda/applications.h
+1474288989 /root/Desktop/Rhonda/applications.h
 	<stdio.h>
 	<wchar.h>
 
-1468843212 /root/Desktop/Rhonda/fonction.h
+1474288975 /root/Desktop/Rhonda/fonction.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
 1466946587 /root/Desktop/Rhonda/libs/slre.h
 
-1468843100 source:/root/Desktop/Rhonda/audio.cpp
+1474291827 source:/root/Desktop/Rhonda/audio.cpp
 	<stdlib.h>
 	<stdint.h>
 	<string.h>
@@ -825,15 +826,15 @@
 	"prog.h"
 	<unistd.h>
 
-1468161739 /root/Desktop/Rhonda/flac.h
+1474288978 /root/Desktop/Rhonda/flac.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
-1468843246 /root/Desktop/Rhonda/hardware.h
+1470558760 /root/Desktop/Rhonda/hardware.h
 	<string>
 
-1468843102 /root/Desktop/Rhonda/audio.h
+1474288986 /root/Desktop/Rhonda/audio.h
 	<string>
 	<vector>
 	<cassert>
@@ -849,12 +850,12 @@
 1466946594 /root/Desktop/Rhonda/libs/portaudio/pa_util.h
 	"portaudio.h"
 
-1468843250 /root/Desktop/Rhonda/prog.h
+1474288971 /root/Desktop/Rhonda/prog.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
-1468161738 source:/root/Desktop/Rhonda/flac.c
+1474288977 source:/root/Desktop/Rhonda/flac.c
 	<config.h>
 	<stdio.h>
 	<stdlib.h>
@@ -876,7 +877,7 @@
 	"fonction.h"
 	<unistd.h>
 
-1468843243 source:/root/Desktop/Rhonda/hardware.cpp
+1470558759 source:/root/Desktop/Rhonda/hardware.cpp
 	<errno.h>
 	<string.h>
 	<stdio.h>
@@ -973,7 +974,7 @@
 	<string.h>
 	"slre.h"
 
-1468843252 source:/root/Desktop/Rhonda/prog.cpp
+1474288969 source:/root/Desktop/Rhonda/prog.cpp
 	<windows.h>
 	<cassert>
 	<csignal>
@@ -989,7 +990,7 @@
 	"audio.h"
 	"hardware.h"
 	"flac.h"
-	"translategoogle.h"
+	"STTEngine.h"
 	"traitement.h"
 	"fonction.h"
 	"applications.h"
@@ -1005,14 +1006,14 @@
 1466946579 /root/Desktop/Rhonda/uart.h
 	<stdio.h>
 
-1468843265 /root/Desktop/Rhonda/translategoogle.h
+1470558776 /root/Desktop/Rhonda/translategoogle.h
 	<stdio.h>
 	<stdlib.h>
 
-1468843260 /root/Desktop/Rhonda/traitement.h
+1474288964 /root/Desktop/Rhonda/traitement.h
 	<string>
 
-1468843258 source:/root/Desktop/Rhonda/traitement.cpp
+1474288962 source:/root/Desktop/Rhonda/traitement.cpp
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1048,7 +1049,7 @@
 1466946587 /root/Desktop/Rhonda/libs/pa_util.h
 	"portaudio.h"
 
-1468843211 source:/root/Desktop/Rhonda/fonction.cpp
+1474288974 source:/root/Desktop/Rhonda/fonction.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -1061,13 +1062,33 @@
 	"fonction.h"
 	<unistd.h>
 
-1468843280 source:/root/Desktop/Rhonda/translategoogle.cpp
+1470558774 source:/root/Desktop/Rhonda/translategoogle.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<wchar.h>
+	<string>
 	<curl/curl.h>
 	"translategoogle.h"
 	"libs/slre.h"
 	"fonction.h"
+	"prog.h"
+
+1474288824 /root/Desktop/Rhonda/STTEngine.h
+	<stdio.h>
+	<stdlib.h>
+
+1474290884 source:/root/Desktop/Rhonda/STTEngine.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<wchar.h>
+	<string>
+	<Rpc.h>
+	<uuid/uuid.h>
+	<curl/curl.h>
+	"STTEngine.h"
+	"libs/slre.h"
+	"fonction.h"
+	"prog.h"
 

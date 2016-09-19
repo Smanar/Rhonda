@@ -24,8 +24,8 @@
     <ClCompile Include="libs\pugixml.cpp" />
     <ClCompile Include="libs\slre.c" />
     <ClCompile Include="prog.cpp" />
+    <ClCompile Include="STTEngine.cpp" />
     <ClCompile Include="traitement.cpp" />
-    <ClCompile Include="translategoogle.cpp" />
     <ClCompile Include="uart.c" />
   </ItemGroup>
   <ItemGroup>
@@ -37,8 +37,8 @@
     <ClInclude Include="libs\slre.h" />
     <ClInclude Include="libs\snowboy-detect.h" />
     <ClInclude Include="prog.h" />
+    <ClInclude Include="STTEngine.h" />
     <ClInclude Include="traitement.h" />
-    <ClInclude Include="translategoogle.h" />
     <ClInclude Include="uart.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -85,7 +85,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>portaudio_x86.lib;libcurl.lib;libogg_static.lib;libFLAC_static.lib;utf8_static.lib;win_utf8_io_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;libcurl.lib;libogg_static.lib;libFLAC_static.lib;utf8_static.lib;win_utf8_io_static.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>uuid.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

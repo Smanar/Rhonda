@@ -63,15 +63,12 @@
     <ClCompile Include="fonction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="translategoogle.cpp">
+    <ClCompile Include="STTEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="flac.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="translategoogle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="traitement.h">
@@ -99,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="prog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="STTEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

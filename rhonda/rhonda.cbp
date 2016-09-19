@@ -52,6 +52,7 @@
 					<Add library="FLAC" />
 					<Add library="curl" />
 					<Add library="wiringPi" />
+					<Add library="uuid" />
 				</Linker>
 			</Target>
 		</Build>
@@ -59,6 +60,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="STTEngine.cpp" />
 		<Unit filename="applications.cpp" />
 		<Unit filename="audio.cpp" />
 		<Unit filename="flac.c">
@@ -78,7 +80,6 @@
 		</Unit>
 		<Unit filename="prog.cpp" />
 		<Unit filename="traitement.cpp" />
-		<Unit filename="translategoogle.cpp" />
 		<Unit filename="uart.c">
 			<Option compilerVar="CC" />
 		</Unit>
