@@ -26,8 +26,8 @@ You can see somes pictures here https://github.com/Smanar/Rhonda/wiki
 
 **It uses:**
 
-- For STT : Google Speech recognition API.
-- For STT : picoTTS.
+- For STT : Google Speech recognition API, or Bing one.
+- For TTS : picoTTS.
 - For hotword detection, software solution with https://github.com/Kitt-AI/snowboy, or hardware with http://www.mikroe.com/click/speakup/
 
 
@@ -97,7 +97,9 @@ Take care your file will be in bin/Release and you need to copy the "resources" 
 **The configuration**
 
 Open the xml file, and change the &lt;api> tag key to set your own key.  
-To get the api key http://www.chromium.org/developers/how-tos/api-keys  
+To get the api key for Google STT http://www.chromium.org/developers/how-tos/api-keys  
+To get the api key for Bing STT https://www.microsoft.com/cognitive-services/en-us/subscriptions  
+Select the speech to text engine you want.
 And then just run the application.
 
 >sudo chmod -R 755 shell  
@@ -118,6 +120,8 @@ And then just run the application.
 ----------
 
 **Remarques speciales**
+
+For better performance I use 8820 Hz for sample rate for Bing Engine to have smaller file size, but it works too with other sample rate, you can change it if you have problem in files [prog.cpp](https://github.com/Smanar/Rhonda/blob/master/rhonda/prog.cpp "prog.cpp") and [STTEngine.cpp](https://github.com/Smanar/Rhonda/blob/master/rhonda/STTEngine.cpp "STTEngine.cpp")
 
 Note pour les utilisateurs francais, le hotword "snowboy" est assez dur a reproduire, du moins pour moi avec mon accent pourri. C'est un des gros probleme de la reconnaissance vocale anglophone.
 Donc allez plutot sur le site https://snowboy.kitt.ai/ fabriquez vous 2 hotwords, du style "Rhonda" et "tu m'ecoutes ?"
