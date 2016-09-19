@@ -74,7 +74,7 @@ A this moment you have 2 solutions, take the pre-compiled version (generaly out 
 
 > sudo apt-get install flac  
 > sudo apt-get install libflac-dev  
-> sudo apt-get install curl  
+> sudo apt-get install curl uuid-dev   
 > sudo apt-get install libcurl4-openssl-dev  
 > sudo apt-get install libjack-jackd2-dev libsndfile1-dev libasound2-dev  
 
