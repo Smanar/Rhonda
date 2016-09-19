@@ -69,7 +69,7 @@ You can see somes pictures here https://github.com/Smanar/Rhonda/wiki
 
 A this moment you have 2 solutions, take the pre-compiled version (generaly out of date), or compile it yourself.
 
-- The precompiled version, just download the archive here https://github.com/Smanar/Rhonda/releases/download/v1.1.0/Rhonda_ReleaseV110.zip , and extract files.
+- The precompiled version, just download the archive here https://github.com/Smanar/Rhonda/releases/download/v1.2.0/Rhonda_Release.zip , and extract files.
 - If you want to compile it you need first to install somes libraries, the codec FLAC, CURL and various audio libs.
 
 > sudo apt-get install flac  
